@@ -4,8 +4,9 @@ import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NextFunction, Request, Response } from 'express';
 import { ProxyService } from '../../shared/services/proxy.service';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('image classifiers')
 @Controller('classifiers/images')
 export class ImagesController {
   private readonly proxy: RequestHandler<

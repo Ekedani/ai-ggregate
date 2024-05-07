@@ -4,8 +4,9 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { NextFunction, Request, Response } from 'express';
 import { ProxyService } from '../../shared/services/proxy.service';
 import { ConfigService } from '@nestjs/config';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   private readonly proxy: RequestHandler<
