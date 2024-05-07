@@ -8,7 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NextFunction, Request, Response } from 'express';
@@ -18,6 +24,7 @@ import { BulkImageModerationDto } from '../dto/bulk-image-moderation.dto';
 import { ProxyService } from '../../shared/services/proxy.service';
 
 @ApiTags('aggregation')
+@ApiBearerAuth('Access Token')
 @Controller('aggregation/images')
 export class ImagesController {
   private readonly proxy: RequestHandler<

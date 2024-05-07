@@ -1,12 +1,15 @@
-import { Controller, Get, Next, Req, Res } from '@nestjs/common';
+import { Controller, Get, Next, Req, Res, UseGuards } from '@nestjs/common';
 import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NextFunction, Request, Response } from 'express';
 import { ProxyService } from '../../shared/services/proxy.service';
 import { ConfigService } from '@nestjs/config';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
 
 @ApiTags('users')
+@ApiBearerAuth('Access Token')
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   private readonly proxy: RequestHandler<

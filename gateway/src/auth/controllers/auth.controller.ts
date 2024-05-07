@@ -54,7 +54,7 @@ export class AuthController {
     this.proxy(req, res, next);
   }
 
-  @ApiBearerAuth()
+  @ApiBearerAuth('Access Token')
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(

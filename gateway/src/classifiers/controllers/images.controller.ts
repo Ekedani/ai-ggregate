@@ -1,12 +1,30 @@
-import { Controller, Next, Post, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Next,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NextFunction, Request, Response } from 'express';
 import { ProxyService } from '../../shared/services/proxy.service';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('image classifiers')
+@ApiBearerAuth('Access Token')
+@UseGuards(JwtAuthGuard)
 @Controller('classifiers/images')
 export class ImagesController {
   private readonly proxy: RequestHandler<
@@ -26,6 +44,20 @@ export class ImagesController {
   }
 
   @Post('prediction')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload a single file',
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
   async classifyImage(
     @Req() req: Request,
     @Res() res: Response,
@@ -35,6 +67,20 @@ export class ImagesController {
   }
 
   @Post(':model/prediction')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload a single file',
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
   @ApiParam({
     name: 'model',
     enum: [

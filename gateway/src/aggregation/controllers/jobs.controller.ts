@@ -1,6 +1,6 @@
 import { Controller, Get, Next, Post, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NextFunction, Request, Response } from 'express';
@@ -9,6 +9,7 @@ import { GetAggregationJobsDto } from '../dto/get-aggregation-jobs.dto';
 import { CreateAggregationJobDto } from '../dto/create-aggregation-job.dto';
 
 @ApiTags('aggregation')
+@ApiBearerAuth('Access Token')
 @Controller('aggregation/jobs')
 export class JobsController {
   private readonly proxy: RequestHandler<

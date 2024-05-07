@@ -1,4 +1,13 @@
-import { Controller, Delete, Get, Next, Post, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Next,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ProxyService } from '../../shared/services/proxy.service';
 import { NextFunction, Request, Response } from 'express';
@@ -13,6 +22,7 @@ import { CreateImageDto } from '../dto/create-image.dto';
 import { GetImagesDto } from '../dto/get-images.dto';
 import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
 
 @ApiTags('content')
 @Controller('content/images')
@@ -35,6 +45,7 @@ export class ImagesController {
   @Post()
   @ApiBearerAuth('Access Token')
   @ApiBody({ type: CreateImageDto })
+  @UseGuards(JwtAuthGuard)
   async createImage(
     @Req() req: Request,
     @Res() res: Response,
@@ -46,6 +57,7 @@ export class ImagesController {
   @Get()
   @ApiBearerAuth('Access Token')
   @ApiQuery({ type: GetImagesDto })
+  @UseGuards(JwtAuthGuard)
   async getImages(
     @Req() req: Request,
     @Res() res: Response,
@@ -67,6 +79,7 @@ export class ImagesController {
   @Delete(':id')
   @ApiBearerAuth('Access Token')
   @ApiParam({ name: 'id', type: 'string' })
+  @UseGuards(JwtAuthGuard)
   async deleteImage(
     @Req() req: Request,
     @Res() res: Response,
