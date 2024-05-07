@@ -57,7 +57,6 @@ export class ImagesController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file'))
   async classifyImage(
     @Req() req: Request,
     @Res() res: Response,
@@ -80,7 +79,6 @@ export class ImagesController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file'))
   @ApiParam({
     name: 'model',
     enum: [

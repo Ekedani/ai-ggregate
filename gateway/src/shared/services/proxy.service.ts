@@ -5,6 +5,7 @@ import { createProxyMiddleware, Options } from 'http-proxy-middleware';
 export class ProxyService {
   private logger = new Logger(ProxyService.name);
 
+  /* eslint-disable */
   public createProxy(
     target: string,
     pathRewriteRules: { [key: string]: string },
@@ -14,15 +15,9 @@ export class ProxyService {
       changeOrigin: true,
       pathRewrite: pathRewriteRules,
       on: {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         proxyReq: (proxyReq, req, res) => {
-          const originalUrl = req.url;
-          const rewrittenPath = proxyReq.path;
-          this.logger.log(
-            `Original URL: ${originalUrl} -> Rewritten Path: ${rewrittenPath}`,
-          );
+          this.logger.log(`Proxying request to ${target}${req.url}`);
         },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         error: (err, req, res) => {
           this.logger.error(err);
         },
