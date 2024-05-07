@@ -16,14 +16,16 @@ export class ClassifiersService {
     );
   }
 
-  public async checkIfImageIsAiGenerated(image: Buffer) {
+  public async classifyImage(image: Buffer, format: string) {
+    const formData = new FormData();
+    formData.append('file', new Blob([image]), `file.${format}`);
     const url = `${this.AI_IMAGE_CLASSIFIER_SERVICE_URL}/prediction`;
     const response = await lastValueFrom(
       this.httpService.post<{
         label: string;
         confidence: number;
         model: string;
-      }>(url, image),
+      }>(url, formData),
     );
     return response.data;
   }

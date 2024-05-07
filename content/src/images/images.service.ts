@@ -36,9 +36,14 @@ export class ImagesService {
       image.buffer,
     );
 
-    //TODO: add image classifier call here
+    const classification =
+      await this.classifierService.classifyImage(
+        image.buffer,
+        savedImage.format,
+      );
 
     savedImage.storageKey = storageKey;
+    savedImage.classification = classification;
     savedImage = await savedImage.save();
     this.postprocessingService.enqueueImageForPostprocessing(
       savedImage._id.toString(),
