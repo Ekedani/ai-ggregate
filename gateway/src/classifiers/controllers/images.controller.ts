@@ -4,6 +4,7 @@ import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NextFunction, Request, Response } from 'express';
 import { ProxyService } from '../../shared/services/proxy.service';
+import { ApiParam } from '@nestjs/swagger';
 
 @Controller('classifiers/images')
 export class ImagesController {
@@ -33,6 +34,15 @@ export class ImagesController {
   }
 
   @Post(':model/prediction')
+  @ApiParam({
+    name: 'model',
+    enum: [
+      'resnet34_image_classifier_v1',
+      'resnet34_image_classifier_v2',
+      'resnet34_image_classifier_v3',
+      'resnet34_image_classifier_v4',
+    ],
+  })
   async classifyImageUsingModel(
     @Req() req: Request,
     @Res() res: Response,
