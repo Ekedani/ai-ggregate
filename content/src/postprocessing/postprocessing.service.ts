@@ -27,7 +27,7 @@ export class PostprocessingService {
     );
   }
 
-  public async processImage(imageId: string) {
+  private async processImage(imageId: string) {
     const url = `${this.POSTPROCESSING_SERVICE_URL}/images`;
     const response = await lastValueFrom(
       this.httpService.post(url, {
