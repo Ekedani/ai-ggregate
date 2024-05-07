@@ -6,11 +6,13 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { UserAuthData } from './shared/entities/user-auth-data.entity';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [configuration],
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     TypeOrmModule.forRootAsync({

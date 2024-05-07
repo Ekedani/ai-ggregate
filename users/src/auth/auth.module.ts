@@ -17,14 +17,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        privateKey: Buffer.from(
-          configService.get<string>('JWT_PRIVATE_KEY_BASE64'),
-          'base64',
-        ).toString('utf8'),
-        publicKey: Buffer.from(
-          configService.get<string>('JWT_PUBLIC_KEY_BASE64'),
-          'base64',
-        ).toString('utf8'),
+        privateKey: configService.get('JWT_PRIVATE_KEY'),
+        publicKey: configService.get('JWT_PUBLIC_KEY'),
         signOptions: {
           expiresIn: '15m',
           algorithm: 'RS256',

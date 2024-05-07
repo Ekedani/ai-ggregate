@@ -71,10 +71,7 @@ export class AuthService {
   }
 
   getPublicKey() {
-    return Buffer.from(
-      this.configService.get<string>('JWT_PUBLIC_KEY_BASE64'),
-      'base64',
-    ).toString('utf8');
+    return this.configService.get('JWT_PUBLIC_KEY');
   }
 
   private async generateAccessToken(user: User): Promise<string> {
