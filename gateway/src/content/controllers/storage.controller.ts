@@ -33,4 +33,14 @@ export class StorageController {
   ) {
     this.proxy(req, res, next);
   }
+
+  @Get('thumbnails/:storageKey')
+  @ApiParam({ name: 'storageKey', type: 'string' })
+  async getThumbnail(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Next() next: NextFunction,
+  ) {
+    this.proxy(req, res, next);
+  }
 }
