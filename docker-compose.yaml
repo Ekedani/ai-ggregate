@@ -1,7 +1,7 @@
 version: "3.8"
 services:
-    ai-image-classifier:
-        image: ekedani/dp-ai-image-classifier:0.1
+    #ai-image-classifier:
+    #    image: ekedani/dp-ai-image-classifier:0.1
 
     users:
         image: ekedani/dp-users:0.2
@@ -33,13 +33,13 @@ services:
             MINIO_PORT: ${MINIO_PORT}
             MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
             MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-            AI_IMAGE_CLASSIFIER_SERVICE_URL: test
+            AI_IMAGE_CLASSIFIER_SERVICE_URL: http://localhost:5000
             POSTPROCESSING_SERVICE_URL: http://postprocessing:5000
             USERS_SERVICE_URL: http://users:3000
         depends_on:
             - users
             - postprocessing
-            - ai-image-classifier
+            #- ai-image-classifier
 
     aggregation:
         image: ekedani/dp-aggregation:0.1
