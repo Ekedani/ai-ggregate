@@ -1,9 +1,31 @@
 version: "3.8"
 services:
+    ai-image-classifier:
+        image: ekedani/dp-ai-image-classifier:0.1
+
+    users:
+        image: ekedani/dp-users:0.2
+        environment:
+            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
+            JWT_PRIVATE_KEY_BASE64: ${JWT_PRIVATE_KEY_BASE64}
+            USERS_DB_HOST: ${USERS_DB_HOST}
+            USERS_DB_PORT: ${USERS_DB_PORT}
+            USERS_DB_USERNAME: ${USERS_DB_USERNAME}
+            USERS_DB_PASSWORD: ${USERS_DB_PASSWORD}
+            USERS_DB_NAME: ${USERS_DB_NAME}
+
+    postprocessing:
+        image: ekedani/dp-postprocessing:0.1
+        environment:
+            CONTENT_DB_URI: ${CONTENT_DB_URI}
+            GOOGLE_VISION_API_KEY: ${GOOGLE_VISION_API_KEY}
+            MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+            MINIO_PORT: ${MINIO_PORT}
+            MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+            MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+
     content:
         image: ekedani/dp-content:0.8
-        ports:
-            - "3000:3000"
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             CONTENT_DB_URI: ${CONTENT_DB_URI}
@@ -17,23 +39,28 @@ services:
         depends_on:
             - users
             - postprocessing
-    users:
-        image: ekedani/dp-users:0.2
+            - ai-image-classifier
+
+    aggregation:
+        image: ekedani/dp-aggregation:0.1
         environment:
-            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
-            JWT_PRIVATE_KEY_BASE64: ${JWT_PRIVATE_KEY_BASE64}
-            USERS_DB_HOST: ${USERS_DB_HOST}
-            USERS_DB_PORT: ${USERS_DB_PORT}
-            USERS_DB_USERNAME: ${USERS_DB_USERNAME}
-            USERS_DB_PASSWORD: ${USERS_DB_PASSWORD}
-            USERS_DB_NAME: ${USERS_DB_NAME}
-    
-    postprocessing:
-        image: ekedani/dp-postprocessing:0.1
+            STAGING_DB_URI: ${STAGING_DB_URI}
+            CONTENT_SERVICE_URL: http://content:3000
+        depends_on:
+            - users
+            - content
+
+    gateway:
+        image: ekedani/dp-gateway:0.1
+        ports:
+            - "3000:3000"
         environment:
-            CONTENT_DB_URI: ${CONTENT_DB_URI}
-            GOOGLE_VISION_API_KEY: ${GOOGLE_VISION_API_KEY}
-            MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-            MINIO_PORT: ${MINIO_PORT}
-            MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-            MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+            USERS_SERVICE_URL: http://users:3000
+            CONTENT_SERVICE_URL: http://content:3000
+            AGGREGATION_SERVICE_URL: http://aggregation:3000
+            AI_IMAGE_CLASSIFIER_SERVICE_URL: http://ai-image-classifier:5000
+        depends_on:
+            - users
+            - postprocessing
+            - content
+            - aggregation
