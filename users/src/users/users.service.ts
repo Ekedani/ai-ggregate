@@ -44,11 +44,27 @@ export class UsersService {
     }
   }
 
-  findAllUsers(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findAllUsers() {
+    const users = await this.usersRepository.find();
+    return {
+      users: users.map((user) => this.sanitizeUser(user)),
+    };
   }
 
-  findUserById(id: string): Promise<User> {
-    return this.usersRepository.findOne({ where: { id } });
+  async findUserById(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return this.sanitizeUser(user);
+  }
+
+  private sanitizeUser(user: User): User {
+    Object.keys(user).forEach((key) => {
+      if (user[key] === null || user[key] === undefined) {
+        delete user[key];
+      }
+    });
+    return user;
   }
 }
