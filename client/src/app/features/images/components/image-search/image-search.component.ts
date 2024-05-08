@@ -73,16 +73,6 @@ export class ImageSearchComponent {
     this.showAllFields = !this.showAllFields;
   }
 
-
-  searchImages() {
-    console.log(this.searchForm.value);
-    this.imageService.searchImages(this.searchForm.value)
-      .subscribe({
-        next: (data) => this.images = data,
-        error: (error) => console.error(error)
-      });
-  }
-
   addTag(event: MatChipInputEvent, tagsType: "contentTags" | "technicalTags") {
     const tag = (event.value || '').trim();
     if (tag) {
@@ -99,5 +89,14 @@ export class ImageSearchComponent {
     if (index >= 0) {
       tags?.value.splice(index, 1);
     }
+  }
+
+  searchImages() {
+    console.log(this.searchForm.value);
+    this.imageService.searchImages(this.searchForm.value)
+      .subscribe({
+        next: (data) => this.images = data,
+        error: (error) => console.error(error)
+      });
   }
 }

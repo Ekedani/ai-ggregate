@@ -6,7 +6,7 @@
       <mat-label>Prompt</mat-label>
       <input matInput formControlName="prompt">
     </mat-form-field>
-    <button mat-icon-button (click)="toggleAdditionalFieldsVisibility()" class="toggle-button"
+    <button mat-icon-button type="button" (click)="toggleAdditionalFieldsVisibility()" class="toggle-button"
             [attr.aria-label]="showAllFields ? 'Hide Options' : 'Show Options'">
       <mat-icon>{{ showAllFields ? 'expand_less' : 'expand_more' }}</mat-icon>
     </button>
