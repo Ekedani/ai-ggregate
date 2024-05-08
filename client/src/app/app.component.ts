@@ -3,7 +3,8 @@ import {RouterOutlet} from '@angular/router';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
 import {HeaderComponent} from "./core/header/header.component";
 import {NavigationComponent} from "./core/navigation/navigation.component";
-import {ImageListComponent} from "./features/images/components/image-list/image-list.component";
+import {ImageGalleryComponent} from "./features/images/components/image-gallery/image-gallery.component";
+import {MatNativeDateModule} from "@angular/material/core";
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ import {ImageListComponent} from "./features/images/components/image-list/image-
     MatSidenavContainer,
     RouterOutlet,
     NavigationComponent,
-    ImageListComponent,
+    ImageGalleryComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

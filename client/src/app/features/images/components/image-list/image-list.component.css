@@ -1,0 +1,11 @@
+div {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+app-image-search {
+  width: 70%;
+  align-self: center;
+  margin: 16px;
+}
