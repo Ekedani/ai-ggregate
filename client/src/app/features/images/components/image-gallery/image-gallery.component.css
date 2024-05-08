@@ -1,0 +1,17 @@
+#grid {
+  width: 100%;
+  counter-reset: grid-item;
+}
+
+.grid-item {
+  float: left;
+  width: 20%;
+  max-height: 512px;
+  overflow: hidden;
+}
+
+.grid-item img {
+  width: 100%;
+  display: block;
+  height: auto;
+}

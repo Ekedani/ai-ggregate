@@ -1,0 +1,45 @@
+<form [formGroup]="searchForm" (ngSubmit)="searchImages()" class="search-form">
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Prompt</mat-label>
+      <input matInput formControlName="prompt">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Negative Prompt</mat-label>
+      <input matInput formControlName="negativePrompt">
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Model</mat-label>
+      <input matInput formControlName="model">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Provider</mat-label>
+      <input matInput formControlName="provider">
+    </mat-form-field>
+  </div>
+
+
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Format</mat-label>
+      <input matInput formControlName="format">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Content Tags</mat-label>
+      <input matInput formControlName="contentTags">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Technical Tags</mat-label>
+      <input matInput formControlName="technicalTags">
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit">Search</button>
+</form>
