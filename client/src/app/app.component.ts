@@ -1,9 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
-import {HeaderComponent} from "./header/header.component";
-import {NavigationComponent} from "./navigation/navigation.component";
-import {ImageListComponent} from "./image-list/image-list.component";
+import {HeaderComponent} from "./core/header/header.component";
+import {NavigationComponent} from "./core/navigation/navigation.component";
+import {ImageListComponent} from "./features/images/components/image-list/image-list.component";
 
 @Component({
   selector: 'app-root',
