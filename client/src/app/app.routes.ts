@@ -7,6 +7,7 @@ import {
 } from "./features/aggregated-images/components/aggregated-image-list/aggregated-image-list.component";
 import {ImageListComponent} from "./features/images/components/image-list/image-list.component";
 import {UsersListComponent} from "./features/users/users-list/users-list.component";
+import {ImagesClassificationComponent} from "./features/image-classification/images-classification.component";
 
 export const routes: Routes = [
   {
@@ -24,6 +25,10 @@ export const routes: Routes = [
   {
     path: 'users',
     component: UsersListComponent,
+  },
+  {
+    path: 'classifiers/images',
+    component: ImagesClassificationComponent,
   },
   {
     path: '',
