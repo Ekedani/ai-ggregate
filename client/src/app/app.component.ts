@@ -3,6 +3,7 @@ import {RouterOutlet} from '@angular/router';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
 import {HeaderComponent} from "./header/header.component";
 import {NavigationComponent} from "./navigation/navigation.component";
+import {ImageListComponent} from "./image-list/image-list.component";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ import {NavigationComponent} from "./navigation/navigation.component";
     MatSidenav,
     MatSidenavContainer,
     RouterOutlet,
-    NavigationComponent
+    NavigationComponent,
+    ImageListComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
