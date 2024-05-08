@@ -1,7 +1,7 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer mode="side" opened="true" class="sidenav">
-    <mat-nav-list>
-    </mat-nav-list>
+<app-header (toggleDrawer)="toggleSidenav()"></app-header>
+<mat-sidenav-container [hasBackdrop]=true>
+  <mat-sidenav mode="over">
+    <app-navigation></app-navigation>
   </mat-sidenav>
   <mat-sidenav-content>
     <router-outlet></router-outlet>

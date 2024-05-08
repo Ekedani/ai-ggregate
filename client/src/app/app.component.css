@@ -1,0 +1,17 @@
+:host {
+  height: 100%;
+  display: block;
+}
+
+app-root, mat-sidenav-container {
+  display: block;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+mat-sidenav {
+  padding: 8px;
+}

@@ -1,15 +1,27 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {MatSidenav, MatSidenavContainer} from "@angular/material/sidenav";
-import {MatNavList} from "@angular/material/list";
+import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
+import {HeaderComponent} from "./header/header.component";
+import {NavigationComponent} from "./navigation/navigation.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatSidenavContainer, MatNavList, MatSidenav],
+  imports: [
+    HeaderComponent,
+    MatSidenavContent,
+    MatSidenav,
+    MatSidenavContainer,
+    RouterOutlet,
+    NavigationComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'client';
+  @ViewChild(MatSidenav) sidenav: MatSidenav | undefined;
+
+  toggleSidenav(): void {
+    this.sidenav?.toggle();
+  }
 }
