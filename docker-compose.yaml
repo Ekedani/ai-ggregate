@@ -1,10 +1,10 @@
 version: "3.8"
 services:
-    #ai-image-classifier:
-    #    image: ekedani/dp-ai-image-classifier:0.1
+    ai-image-classifier:
+        image: ekedani/ai-image-classifier:0.2
 
     users:
-        image: ekedani/dp-users:0.2
+        image: ekedani/dp-users:0.3
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             JWT_PRIVATE_KEY_BASE64: ${JWT_PRIVATE_KEY_BASE64}
@@ -33,28 +33,31 @@ services:
             MINIO_PORT: ${MINIO_PORT}
             MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
             MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-            AI_IMAGE_CLASSIFIER_SERVICE_URL: http://localhost:5000
+            AI_IMAGE_CLASSIFIER_SERVICE_URL: http://ai-image-classifier:5000
             POSTPROCESSING_SERVICE_URL: http://postprocessing:5000
             USERS_SERVICE_URL: http://users:3000
         depends_on:
             - users
             - postprocessing
-            #- ai-image-classifier
+            - ai-image-classifier
 
     aggregation:
-        image: ekedani/dp-aggregation:0.1
+        image: ekedani/dp-aggregation:0.2
         environment:
+            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             STAGING_DB_URI: ${STAGING_DB_URI}
+            USERS_SERVICE_URL: http://users:3000
             CONTENT_SERVICE_URL: http://content:3000
         depends_on:
             - users
             - content
 
     gateway:
-        image: ekedani/dp-gateway:0.1
+        image: ekedani/dp-gateway:0.3
         ports:
-            - "3000:3000"
+            - "80:3000"
         environment:
+            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             USERS_SERVICE_URL: http://users:3000
             CONTENT_SERVICE_URL: http://content:3000
             AGGREGATION_SERVICE_URL: http://aggregation:3000
@@ -64,3 +67,4 @@ services:
             - postprocessing
             - content
             - aggregation
+            - ai-image-classifier
