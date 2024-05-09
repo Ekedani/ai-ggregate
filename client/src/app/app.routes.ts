@@ -8,11 +8,16 @@ import {
 import {ImageListComponent} from "./features/images/components/image-list/image-list.component";
 import {UsersListComponent} from "./features/users/users-list/users-list.component";
 import {ImagesClassificationComponent} from "./features/image-classification/images-classification.component";
+import {ImageComponent} from "./features/images/components/image/image.component";
 
 export const routes: Routes = [
   {
     path: 'content/images',
     component: ImageListComponent
+  },
+  {
+    path: 'content/images/:id',
+    component: ImageComponent
   },
   {
     path: 'aggregation/jobs',

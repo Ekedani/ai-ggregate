@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ImagesService} from "../../services/images.service";
+import {ImagesService} from "../../images.service";
 import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
@@ -47,14 +47,14 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
 })
 export class ImageSearchComponent {
   images: AiGeneratedImage[] = [];
-  searchForm: FormGroup;
+  searchQueryForm: FormGroup;
 
   showAllFields = false;
   tagsSeparatorKeysCodes: number[] = [ENTER, COMMA];
 
 
   constructor(private imageService: ImagesService, private fb: FormBuilder) {
-    this.searchForm = this.fb.group({
+    this.searchQueryForm = this.fb.group({
       prompt: [''],
       negativePrompt: [''],
       model: [''],
@@ -65,7 +65,7 @@ export class ImageSearchComponent {
       contentTags: [[]],
       technicalTags: [[]],
       page: [1],
-      limit: [100]
+      limit: [100],
     });
   }
 
@@ -76,7 +76,7 @@ export class ImageSearchComponent {
   addTag(event: MatChipInputEvent, tagsType: "contentTags" | "technicalTags") {
     const tag = (event.value || '').trim();
     if (tag) {
-      const tags = this.searchForm.get(tagsType);
+      const tags = this.searchQueryForm.get(tagsType);
       tags?.setValue([...tags?.value, tag]);
     }
     event.chipInput!.clear();
@@ -84,7 +84,7 @@ export class ImageSearchComponent {
   }
 
   removeTag(event: MatChipEvent, tagsType: "contentTags" | "technicalTags") {
-    const tags = this.searchForm.get(tagsType);
+    const tags = this.searchQueryForm.get(tagsType);
     const index = tags?.value.indexOf(event.chip.value);
     if (index >= 0) {
       tags?.value.splice(index, 1);
@@ -92,8 +92,8 @@ export class ImageSearchComponent {
   }
 
   searchImages() {
-    console.log(this.searchForm.value);
-    this.imageService.searchImages(this.searchForm.value)
+    console.log(this.searchQueryForm.value);
+    this.imageService.searchImages(this.searchQueryForm.value)
       .subscribe({
         next: (data) => this.images = data,
         error: (error) => console.error(error)

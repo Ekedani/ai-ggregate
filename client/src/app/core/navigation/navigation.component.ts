@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {RouterLink} from "@angular/router";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 import {MatIcon} from "@angular/material/icon";
 import {MatListItem, MatListSubheaderCssMatStyler, MatNavList} from "@angular/material/list";
 
@@ -11,7 +11,8 @@ import {MatListItem, MatListSubheaderCssMatStyler, MatNavList} from "@angular/ma
     MatIcon,
     MatListItem,
     MatListSubheaderCssMatStyler,
-    MatNavList
+    MatNavList,
+    RouterLinkActive
   ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css'
