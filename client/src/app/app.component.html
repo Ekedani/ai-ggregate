@@ -1,9 +1,15 @@
-<app-header (toggleDrawer)="toggleSidenav()"></app-header>
-<mat-sidenav-container [hasBackdrop]=true>
-  <mat-sidenav mode="over">
-    <app-navigation></app-navigation>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<ng-container *ngIf="authService.getIsLoggedIn() | async; else authRouterOutlet">
+  <app-header (toggleDrawer)="toggleSidenav()"></app-header>
+  <mat-sidenav-container [hasBackdrop]="true">
+    <mat-sidenav mode="over">
+      <app-navigation></app-navigation>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>
+
+<ng-template #authRouterOutlet>
+  <router-outlet></router-outlet>
+</ng-template>

@@ -7,4 +7,15 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span>AI-ggregate</span>
+  <ng-container *ngIf="userInfo$ | async as userInfo">
+    <a mat-button [routerLink]="['/profile']">
+      <mat-icon>account_circle</mat-icon>
+      {{ userInfo.username }}
+    </a>
+    <button mat-button (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      Logout
+    </button>
+  </ng-container>
 </mat-toolbar>
+

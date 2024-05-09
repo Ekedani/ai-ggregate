@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {tap} from "rxjs";
+import {BehaviorSubject, Observable, tap} from "rxjs";
 import {jwtDecode} from 'jwt-decode';
 
 
@@ -10,10 +10,25 @@ import {jwtDecode} from 'jwt-decode';
 export class AuthService {
 
   private readonly apiUrl = 'http://localhost:80';
+  private readonly isLoggedIn$ = new BehaviorSubject<boolean>(this.hasToken());
+  private readonly userInfo$ = new BehaviorSubject<{
+    username?: string;
+    id?: string;
+    roles?: string[]
+  } | null>(this.decodeToken());
+
 
   constructor(
     private readonly http: HttpClient,
   ) {
+  }
+
+  getIsLoggedIn(): Observable<boolean> {
+    return this.isLoggedIn$.asObservable();
+  }
+
+  getUserInfo() {
+    return this.userInfo$.asObservable();
   }
 
   register(data: { username: string; password: string; email: string; firstName?: string; lastName?: string; }) {
@@ -25,6 +40,8 @@ export class AuthService {
       tap(tokens => {
         localStorage.setItem('accessToken', tokens.accessToken);
         localStorage.setItem('refreshToken', tokens.refreshToken);
+        this.isLoggedIn$.next(true);
+        this.userInfo$.next(this.decodeToken());
       })
     );
   }
@@ -37,6 +54,7 @@ export class AuthService {
       tap(updatedTokens => {
         localStorage.setItem('accessToken', updatedTokens.accessToken);
         localStorage.setItem('refreshToken', updatedTokens.refreshToken);
+        this.userInfo$.next(this.decodeToken());
       })
     );
   }
@@ -46,10 +64,11 @@ export class AuthService {
       tap(() => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        this.isLoggedIn$.next(false);
+        this.userInfo$.next(null);
       })
     );
   }
-
 
   getAccessToken() {
     return localStorage.getItem('accessToken');
@@ -59,20 +78,20 @@ export class AuthService {
     return localStorage.getItem('refreshToken');
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getAccessToken();
+  private hasToken(): boolean {
+    return !!localStorage.getItem('accessToken');
   }
 
-  getUserInfo(): { username?: string; id?: string, roles?: string[] } {
-    const token = this.getAccessToken();
-    if (token) {
-      try {
-        const decoded: any = jwtDecode(token);
-        return {id: decoded.sub, username: decoded.username, roles: decoded.roles};
-      } catch (error) {
-        return {};
-      }
+  private decodeToken() {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+    try {
+      const decoded: any = jwtDecode(token);
+      return {id: decoded.sub, username: decoded.username, roles: decoded.roles};
+    } catch (error) {
+      return null;
     }
-    return {};
   }
+
+
 }
