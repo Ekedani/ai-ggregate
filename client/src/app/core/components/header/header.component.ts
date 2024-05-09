@@ -3,7 +3,7 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {MatIcon} from "@angular/material/icon";
 import {MatAnchor, MatButton, MatIconButton} from "@angular/material/button";
 import {Router, RouterLink} from "@angular/router";
-import {AuthService} from "../../auth.service";
+import {AuthService} from "../../services/auth.service";
 import {Observable} from "rxjs";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {ToastrService} from "ngx-toastr";

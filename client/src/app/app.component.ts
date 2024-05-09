@@ -5,7 +5,7 @@ import {HeaderComponent} from "./core/components/header/header.component";
 import {NavigationComponent} from "./core/components/navigation/navigation.component";
 import {ImageGalleryComponent} from "./features/images/components/image-gallery/image-gallery.component";
 import {AsyncPipe, NgIf} from "@angular/common";
-import {AuthService} from "./core/auth.service";
+import {AuthService} from "./core/services/auth.service";
 
 @Component({
   selector: 'app-root',

@@ -1,11 +1,12 @@
 import {HttpHandlerFn, HttpInterceptorFn} from '@angular/common/http';
 import {catchError, switchMap, throwError} from "rxjs";
 import {inject} from "@angular/core";
-import {AuthService} from "./core/auth.service";
+import {AuthService} from "../services/auth.service";
 
 export const authInterceptor: HttpInterceptorFn = (req, next: HttpHandlerFn) => {
   const authService = inject(AuthService);
   const accessToken = authService.getAccessToken();
+  console.log('accessToken', accessToken);
   const authReq = accessToken ? req.clone({
     setHeaders: {
       Authorization: `Bearer ${accessToken}`

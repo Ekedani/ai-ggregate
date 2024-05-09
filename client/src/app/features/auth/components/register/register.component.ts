@@ -3,7 +3,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
-import {AuthService} from "../../../../core/auth.service";
+import {AuthService} from "../../../../core/services/auth.service";
 import {Router, RouterLink} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 
