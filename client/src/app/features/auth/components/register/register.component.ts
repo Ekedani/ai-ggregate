@@ -1,9 +1,11 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormField} from "@angular/material/form-field";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {AuthService} from "../../../../core/auth.service";
+import {Router, RouterLink} from "@angular/router";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-register',
@@ -12,7 +14,9 @@ import {AuthService} from "../../../../core/auth.service";
     ReactiveFormsModule,
     MatFormField,
     MatButton,
-    MatInput
+    MatInput,
+    MatLabel,
+    RouterLink
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -26,7 +30,11 @@ export class RegisterComponent {
     lastName: new FormControl('')
   });
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private toastrService: ToastrService,
+    private router: Router,
+  ) {
   }
 
   onRegister() {
@@ -37,6 +45,13 @@ export class RegisterComponent {
       firstName: this.registerForm.get('firstName')?.value || undefined,
       lastName: this.registerForm.get('lastName')?.value || undefined
     };
-    this.authService.register(formData);
+    this.authService.register(formData).subscribe({
+      next: (response) => {
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.toastrService.error(error.message, 'Registration failed');
+      }
+    });
   }
 }

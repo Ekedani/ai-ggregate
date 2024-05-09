@@ -1,15 +1,25 @@
-<form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-  <mat-form-field appearance="fill">
-    <mat-label>Email</mat-label>
-    <input matInput formControlName="email">
-    <mat-error *ngIf="loginForm.controls.email.invalid">Invalid email</mat-error>
-  </mat-form-field>
+<div class="form-container">
+  <div class="form-header">
+    <h2 class="form-title">Login</h2>
+  </div>
+  <form class="form-content" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+      </mat-form-field>
+    </div>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Password</mat-label>
-    <input matInput formControlName="password" type="password">
-    <mat-error *ngIf="loginForm.controls.password.invalid">Password is required</mat-error>
-  </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password">
+      </mat-form-field>
+    </div>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Login</button>
-</form>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Login</button>
+    <p>
+      Or <a [routerLink]="['/register']">register</a> if you don't have an account
+    </p>
+  </form>
+</div>

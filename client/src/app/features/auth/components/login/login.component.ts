@@ -1,10 +1,12 @@
 import {Component} from '@angular/core';
 import {AuthService} from "../../../../core/auth.service";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormField} from "@angular/material/form-field";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
+import {Router, RouterLink} from "@angular/router";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,9 @@ import {NgIf} from "@angular/common";
     MatFormField,
     MatInput,
     MatButton,
-    NgIf
+    NgIf,
+    MatLabel,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -25,7 +29,11 @@ export class LoginComponent {
     password: new FormControl('', [Validators.required])
   });
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private toastrService: ToastrService,
+    private router: Router,
+  ) {
   }
 
   onLogin() {
@@ -33,6 +41,13 @@ export class LoginComponent {
       email: this.loginForm.get('email')?.value || '',
       password: this.loginForm.get('password')?.value || ''
     };
-    this.authService.login(formData);
+    this.authService.login(formData).subscribe({
+      next: (response) => {
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        this.toastrService.error(error.message, 'Login failed');
+      }
+    });
   }
 }
