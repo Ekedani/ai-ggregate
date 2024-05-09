@@ -1,10 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
-import {HeaderComponent} from "./core/header/header.component";
-import {NavigationComponent} from "./core/navigation/navigation.component";
+import {HeaderComponent} from "./core/components/header/header.component";
+import {NavigationComponent} from "./core/components/navigation/navigation.component";
 import {ImageGalleryComponent} from "./features/images/components/image-gallery/image-gallery.component";
-import {MatNativeDateModule} from "@angular/material/core";
 
 @Component({
   selector: 'app-root',
