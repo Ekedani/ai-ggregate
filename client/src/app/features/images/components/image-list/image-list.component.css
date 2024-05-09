@@ -9,3 +9,8 @@ app-image-search {
   align-self: center;
   margin: 16px;
 }
+
+pagination-controls {
+  align-self: center;
+  margin: 0;
+}
