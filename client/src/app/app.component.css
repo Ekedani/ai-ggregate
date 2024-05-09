@@ -3,7 +3,7 @@
   display: block;
 }
 
-app-root, mat-sidenav-container {
+mat-sidenav-container {
   display: block;
   min-height: 100%;
   width: 100%;

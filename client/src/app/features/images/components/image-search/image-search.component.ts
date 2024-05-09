@@ -3,7 +3,6 @@ import {ImagesService} from "../../images.service";
 import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
-import {AiGeneratedImage} from "../../models/ai-generated-image";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {
@@ -47,11 +46,9 @@ import {ToastrService} from "ngx-toastr";
   styleUrl: './image-search.component.css'
 })
 export class ImageSearchComponent {
-  images: AiGeneratedImage[] = [];
   searchQueryForm: FormGroup;
   showAllFields = false;
   tagsSeparatorKeysCodes: number[] = [ENTER, COMMA];
-
 
   constructor(
     private imageService: ImagesService,
@@ -73,6 +70,10 @@ export class ImageSearchComponent {
     });
   }
 
+  ngOnInit() {
+    this.searchImages();
+  }
+
   toggleAdditionalFieldsVisibility(): void {
     this.showAllFields = !this.showAllFields;
   }
@@ -84,7 +85,6 @@ export class ImageSearchComponent {
       tags?.setValue([...tags?.value, tag]);
     }
     event.chipInput!.clear();
-
   }
 
   removeTag(event: MatChipEvent, tagsType: "contentTags" | "technicalTags") {
@@ -99,7 +99,6 @@ export class ImageSearchComponent {
     const imagesSearchQuery = this.getImagesSearchQuery();
     this.imageService.searchImages(imagesSearchQuery)
       .subscribe({
-        next: (data) => console.log(data),
         error: (error) => this.toastrService.error(error.message, 'Error while searching images')
       });
   }

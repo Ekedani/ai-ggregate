@@ -1,10 +1,10 @@
 <div id="grid" #masonryContainer>
-  <div class="grid-item" *ngFor="let item of images">
-    <a [routerLink]="[item?.id]">
-      <img [src]="item.src" [alt]="item.prompt ? item.prompt : 'Unknown prompt'">
+  <div class="grid-item" *ngFor="let image of images">
+    <a [routerLink]="[image.id]">
+      <img [src]="image.thumbnailUrl" [alt]="image.prompt ? image.prompt : 'Unknown prompt'">
       <div class="image-overlay">
-        <p class="image-prompt">{{ item.prompt ? item.prompt : 'Unknown prompt' }}</p>
-        <span class="author-name">{{ item.author?.username ? item.author.username : 'Unknown author' }}</span>
+        <p class="image-prompt">{{ image.prompt ? image.prompt : 'Unknown prompt' }}</p>
+        <span class="author-name">{{ image.author ? image.author : 'Unknown author' }}</span>
       </div>
     </a>
   </div>

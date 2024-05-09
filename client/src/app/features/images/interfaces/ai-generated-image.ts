@@ -3,7 +3,7 @@ export interface AiGeneratedImage {
   prompt?: string;
   negativePrompt?: string;
   model?: string;
-  author: {
+  author?: {
     name: string;
     id?: string;
   };
