@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" >
+<mat-toolbar color="primary">
   <button
     mat-icon-button class="example-icon"
     aria-label="Example icon-button with menu icon"
@@ -7,7 +7,7 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span>AI-ggregate</span>
-  <ng-container *ngIf="userInfo$ | async as userInfo">
+  <div class="user-info" *ngIf="userInfo$ | async as userInfo">
     <a mat-button [routerLink]="['/profile']">
       <mat-icon>account_circle</mat-icon>
       {{ userInfo.username }}
@@ -16,6 +16,6 @@
       <mat-icon>exit_to_app</mat-icon>
       Logout
     </button>
-  </ng-container>
+  </div>
 </mat-toolbar>
 
