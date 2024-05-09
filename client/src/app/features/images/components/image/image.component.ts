@@ -6,7 +6,8 @@ import {
   MatCard,
   MatCardActions,
   MatCardAvatar,
-  MatCardContent, MatCardHeader,
+  MatCardContent,
+  MatCardHeader,
   MatCardImage,
   MatCardSubtitle,
   MatCardTitle
@@ -41,7 +42,9 @@ import {MatIcon} from "@angular/material/icon";
   styleUrl: './image.component.css'
 })
 export class ImageComponent {
-  image!: AiGeneratedImage;
+  image?: AiGeneratedImage;
+  imageSrc?: string;
+  imageAlt?: string;
 
   constructor(
     private readonly imagesService: ImagesService,
@@ -54,11 +57,9 @@ export class ImageComponent {
       const id = params['id'];
       this.imagesService.getImage(id).subscribe(image => {
         this.image = image;
+        this.imageSrc = this.imagesService.getImageUrl(image);
+        this.imageAlt = image.prompt || 'AI Generated Image';
       });
     });
-  }
-
-  getImgSrc(image: AiGeneratedImage): string {
-    return this.imagesService.getImageUrl(image);
   }
 }

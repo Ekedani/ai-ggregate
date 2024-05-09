@@ -1,5 +1,5 @@
-<div id="grid" #masonryContainer>
-  <div class="grid-item" *ngFor="let image of images">
+<ngx-masonry [options]="masonryOptions">
+  <div ngxMasonryItem class="grid-item" *ngFor="let image of $galleryImages | async">
     <a [routerLink]="[image.id]">
       <img [src]="image.thumbnailUrl" [alt]="image.prompt ? image.prompt : 'Unknown prompt'">
       <div class="image-overlay">
@@ -8,4 +8,4 @@
       </div>
     </a>
   </div>
-</div>
+</ngx-masonry>

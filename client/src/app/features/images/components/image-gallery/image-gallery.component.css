@@ -1,6 +1,5 @@
-#grid {
+ngx-masonry {
   width: 100%;
-  counter-reset: grid-item;
 }
 
 .grid-item {
@@ -17,7 +16,7 @@
   height: auto;
 }
 
-#grid .grid-item .image-overlay {
+.grid-item .image-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -34,7 +33,7 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-#grid .grid-item .image-overlay .image-prompt {
+.grid-item .image-overlay .image-prompt {
   margin: 0;
   font-size: 1em;
   white-space: nowrap;
@@ -43,13 +42,13 @@
   width: 100%;
 }
 
-#grid .grid-item .image-overlay .author-name {
+.grid-item .image-overlay .author-name {
   margin: 2px 0 0;
   font-size: 0.75em;
   opacity: 0.75;
 }
 
-#grid .grid-item:hover .image-overlay {
+.grid-item:hover .image-overlay {
   cursor: pointer;
   opacity: 1;
 }

@@ -1,10 +1,10 @@
-<article class="card">
+<article class="card" *ngIf="image">
   <div class="card-body">
     <figure class="card-figure">
       <img
         class="card-image"
-        [src]="getImgSrc(image)"
-        [alt]="image.prompt || 'Image'"
+        [src]="imageSrc"
+        [alt]="imageAlt"
       >
     </figure>
     <div class="card-content">

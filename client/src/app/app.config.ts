@@ -9,6 +9,7 @@ import {provideToastr} from "ngx-toastr";
 
 import {authInterceptor} from "./core/interceptors/auth.interceptor";
 import {NgxPaginationModule} from "ngx-pagination";
+import {NgxMasonryModule} from "ngx-masonry";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,6 +20,7 @@ export const appConfig: ApplicationConfig = {
       authInterceptor
     ])),
     provideToastr(),
-    importProvidersFrom(NgxPaginationModule)
+    importProvidersFrom(NgxPaginationModule),
+    importProvidersFrom(NgxMasonryModule)
   ]
 };

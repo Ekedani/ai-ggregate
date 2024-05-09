@@ -23,6 +23,7 @@
     "imagesloaded": "^5.0.0",
     "jwt-decode": "^4.0.0",
     "masonry-layout": "^4.2.2",
+    "ngx-masonry": "^14.0.1",
     "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^18.0.0",
     "rxjs": "~7.8.0",
