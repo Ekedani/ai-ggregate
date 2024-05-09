@@ -19,6 +19,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-image-search',
@@ -48,12 +49,15 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
 export class ImageSearchComponent {
   images: AiGeneratedImage[] = [];
   searchQueryForm: FormGroup;
-
   showAllFields = false;
   tagsSeparatorKeysCodes: number[] = [ENTER, COMMA];
 
 
-  constructor(private imageService: ImagesService, private fb: FormBuilder) {
+  constructor(
+    private imageService: ImagesService,
+    private fb: FormBuilder,
+    private toastrService: ToastrService
+  ) {
     this.searchQueryForm = this.fb.group({
       prompt: [''],
       negativePrompt: [''],
@@ -92,11 +96,22 @@ export class ImageSearchComponent {
   }
 
   searchImages() {
-    console.log(this.searchQueryForm.value);
-    this.imageService.searchImages(this.searchQueryForm.value)
+    const imagesSearchQuery = this.getImagesSearchQuery();
+    this.imageService.searchImages(imagesSearchQuery)
       .subscribe({
-        next: (data) => this.images = data,
-        error: (error) => console.error(error)
+        next: (data) => console.log(data),
+        error: (error) => this.toastrService.error(error.message, 'Error while searching images')
       });
+  }
+
+  private getImagesSearchQuery(): { [key: string]: string | string[] } {
+    return Object.entries(this.searchQueryForm.value)
+      .filter(([key, value]) => {
+        return value !== null && value !== '' && !(Array.isArray(value) && value.length === 0);
+      })
+      .reduce((obj: { [key: string]: string | string[] }, [key, value]) => {
+        obj[key] = Array.isArray(value) ? value.map(item => String(item)) : String(value);
+        return obj;
+      }, {});
   }
 }

@@ -48,6 +48,7 @@ export class RegisterComponent {
     this.authService.register(formData).subscribe({
       next: (response) => {
         this.router.navigate(['/login']);
+        this.toastrService.success('You have successfully registered', 'Registration successful');
       },
       error: (error) => {
         this.toastrService.error(error.message, 'Registration failed');

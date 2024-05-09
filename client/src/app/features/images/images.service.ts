@@ -12,19 +12,7 @@ export class ImagesService {
   constructor(private http: HttpClient) {
   }
 
-  searchImages(query: {
-    page: number,
-    limit: number,
-    prompt?: string,
-    negativePrompt?: string,
-    model?: string,
-    createdAfter?: string,
-    createdBefore?: string,
-    provider?: string,
-    format?: string,
-    contentTags?: string[],
-    technicalTags?: string[],
-  }): Observable<AiGeneratedImage[]> {
+  searchImages(query: { [key: string]: string | string[] }): Observable<AiGeneratedImage[]> {
     const params = new HttpParams({fromObject: query});
     return this.http.get<AiGeneratedImage[]>(`${this.apiUrl}/content/images`, {params});
   }
