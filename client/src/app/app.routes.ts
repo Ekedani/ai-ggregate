@@ -12,6 +12,7 @@ import {ImageComponent} from "./features/images/components/image/image.component
 import {LoginComponent} from "./features/auth/components/login/login.component";
 import {RegisterComponent} from "./features/auth/components/register/register.component";
 import {UserComponent} from "./features/users/user/user.component";
+import {authGuard} from "./core/guards/auth.guard";
 
 export const routes: Routes = [
   {
@@ -23,34 +24,42 @@ export const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: 'content/images',
-    component: ImageListComponent
-  },
-  {
     path: 'content/images/:id',
     component: ImageComponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
+    canActivate: [authGuard],
   },
   {
+    path: 'content/images',
+    component: ImageListComponent,
+    canActivate: [authGuard]
+  },
+
+  {
     path: 'aggregation/jobs',
-    component: AggregationJobListComponent
+    component: AggregationJobListComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'aggregation/images',
-    component: AggregatedImageListComponent
+    component: AggregatedImageListComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'users',
     component: UsersListComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'users/:id',
     component: UserComponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
+    canActivate: [authGuard],
   },
   {
     path: 'classifiers/images',
     component: ImagesClassificationComponent,
+    canActivate: [authGuard]
   },
   {
     path: '',
