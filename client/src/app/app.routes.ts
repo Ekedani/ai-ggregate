@@ -11,6 +11,7 @@ import {ImagesClassificationComponent} from "./features/image-classification/ima
 import {ImageComponent} from "./features/images/components/image/image.component";
 import {LoginComponent} from "./features/auth/components/login/login.component";
 import {RegisterComponent} from "./features/auth/components/register/register.component";
+import {UserComponent} from "./features/users/user/user.component";
 
 export const routes: Routes = [
   {
@@ -27,7 +28,8 @@ export const routes: Routes = [
   },
   {
     path: 'content/images/:id',
-    component: ImageComponent
+    component: ImageComponent,
+    pathMatch: 'full'
   },
   {
     path: 'aggregation/jobs',
@@ -40,6 +42,11 @@ export const routes: Routes = [
   {
     path: 'users',
     component: UsersListComponent,
+  },
+  {
+    path: 'users/:id',
+    component: UserComponent,
+    pathMatch: 'full'
   },
   {
     path: 'classifiers/images',

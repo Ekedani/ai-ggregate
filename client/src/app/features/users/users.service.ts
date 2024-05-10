@@ -24,7 +24,7 @@ export class UsersService {
     )
   }
 
-  getUser(id: string) {
+  getUser(id: string | null) {
     return this.httpClient.get<User>(`${this.apiUrl}/users/${id}`)
   }
 }

@@ -1,0 +1,44 @@
+.user-container {
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-details {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+p {
+  color: #666;
+  font-size: 16px;
+}
+
+.user-placeholder-avatar {
+  font-size: 100px;
+  color: #757575;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
+
+mat-icon {
+  vertical-align: middle;
+  margin-right: 5px;
+}
