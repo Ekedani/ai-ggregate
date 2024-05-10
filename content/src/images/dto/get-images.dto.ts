@@ -4,6 +4,7 @@ import {
   IsDate,
   IsIn,
   IsInt,
+  IsNotEmpty,
   IsOptional,
   IsString,
   Max,
@@ -59,6 +60,7 @@ export class GetImagesDto {
   })
   @IsArray()
   @IsString({ each: true })
+  @IsNotEmpty({ each: true })
   contentTags?: string[];
 
   @IsOptional()
@@ -67,5 +69,11 @@ export class GetImagesDto {
   })
   @IsArray()
   @IsString({ each: true })
+  @IsNotEmpty({ each: true })
   technicalTags?: string[];
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  authorId?: string;
 }

@@ -82,6 +82,7 @@ export class ImagesService {
       contentTags,
       technicalTags,
       format,
+      authorId,
     } = getImagesDto;
 
     const matchStage = {};
@@ -101,6 +102,7 @@ export class ImagesService {
     if (format) matchStage['format'] = format;
     if (contentTags) matchStage['contentTags'] = { $in: contentTags };
     if (technicalTags) matchStage['technicalTags'] = { $in: technicalTags };
+    if (authorId) matchStage['author.id'] = authorId;
 
     return matchStage;
   }
