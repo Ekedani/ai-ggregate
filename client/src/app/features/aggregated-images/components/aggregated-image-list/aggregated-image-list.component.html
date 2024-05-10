@@ -1,38 +1,4 @@
 <div class="ai-image-card-container">
   <pagination-controls></pagination-controls>
-  <mat-card *ngFor="let image of images" class="ai-image-card">
-    <div class="card-layout">
-      <img
-        mat-card-image
-        [src]="image.imageUrl"
-        [alt]="image.altText || 'AI generated image'"
-        class="ai-image"
-        appImageFallback
-      >
-      <div class="card-info">
-        <mat-card-header>
-          <mat-card-title>{{ image.provider.name }}</mat-card-title>
-          <mat-card-subtitle>
-            <mat-icon *ngIf="image.provider.isTrusted">verified_user</mat-icon>
-            {{ image.provider.isTrusted ? 'Trusted' : 'Not Trusted' }}
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p *ngIf="image.dimensions"><b>Dimensions:</b> {{ image.dimensions.width }} x {{ image.dimensions.height }}
-          </p>
-          <p *ngIf="image.format"><b>Format:</b> {{ image.format }}</p>
-          <p *ngIf="image.prompt"><b>Prompt:</b> {{ image.prompt }}</p>
-          <p *ngIf="image.negativePrompt"><b>Negative Prompt:</b> {{ image.negativePrompt }}</p>
-          <p *ngIf="image.model"><b>Model:</b> {{ image.model }}</p>
-          <p *ngIf="image.author"><b>Author:</b> {{ image.author }}</p>
-          <p *ngIf="image.createdAt"><b>Created:</b> {{ image.createdAt | date:'medium' }}</p>
-          <p *ngIf="image.publicationUrl"><b>Publication:</b> <a [href]="image.publicationUrl">Link</a></p>
-          <p *ngIf="image.status"><b>Status:</b> {{ image.status }}</p>
-          <p *ngIf="image.reviewedAt"><b>Reviewed:</b> {{ image.reviewedAt | date:'medium' }}</p>
-          <p *ngIf="image.contentTags?.length"><b>Content Tags:</b> {{ image.contentTags.join(', ') }}</p>
-          <p *ngIf="image.technicalTags?.length"><b>Technical Tags:</b> {{ image.technicalTags.join(', ') }}</p>
-        </mat-card-content>
-      </div>
-    </div>
-  </mat-card>
+  <app-aggregated-image-card *ngFor="let image of images" [image]="image"></app-aggregated-image-card>
 </div>

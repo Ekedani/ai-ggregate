@@ -1,4 +1,4 @@
-import {Provider} from "@angular/core";
+import {Provider} from "./provider";
 
 export interface AggregatedData {
   provider: Provider;

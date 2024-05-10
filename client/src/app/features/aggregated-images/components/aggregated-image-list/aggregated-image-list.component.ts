@@ -1,45 +1,25 @@
 import {Component} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardImage,
-  MatCardSubtitle,
-  MatCardTitle
-} from "@angular/material/card";
-import {MatIcon} from "@angular/material/icon";
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
-import {MatChip, MatChipSet} from "@angular/material/chips";
+import {NgForOf} from "@angular/common";
 import {AggregatedImagesService} from "../../aggregated-images.service";
+import {AggregatedImageCardComponent} from "../aggregated-image-card/aggregated-image-card.component";
+import {AggregatedImage} from "../../interfaces/aggregated-image";
 import {NgxPaginationModule} from "ngx-pagination";
-import {ImageFallbackDirective} from "../../../../shared/directives/image-fallback.directive";
 
 @Component({
   selector: 'app-aggregated-image-list',
   standalone: true,
   imports: [
     MatPaginator,
-    MatCard,
-    MatCardHeader,
-    MatIcon,
     NgForOf,
-    MatCardImage,
-    MatCardContent,
-    MatChip,
-    MatChipSet,
-    MatCardSubtitle,
-    MatCardTitle,
-    NgxPaginationModule,
-    NgIf,
-    DatePipe,
-    ImageFallbackDirective
+    AggregatedImageCardComponent,
+    NgxPaginationModule
   ],
   templateUrl: './aggregated-image-list.component.html',
   styleUrl: './aggregated-image-list.component.css'
 })
 export class AggregatedImageListComponent {
-  images: any[] = [];
+  images: AggregatedImage[] = [];
   totalImages = 0;
   pageSize = 100;
 
