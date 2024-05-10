@@ -1,4 +1,4 @@
-import {Component, DestroyRef, Inject, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {AggregatedImagesService} from "../../aggregated-images.service";
@@ -8,6 +8,8 @@ import {NgxPaginationModule} from "ngx-pagination";
 import {SmallAggregatedImageCardComponent} from "../small-aggregated-image-card/small-aggregated-image-card.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Observable, Subject, takeUntil} from "rxjs";
+import {MatCheckbox} from "@angular/material/checkbox";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-aggregated-image-list',
@@ -18,18 +20,21 @@ import {Observable, Subject, takeUntil} from "rxjs";
     LargeAggregatedImageCardComponent,
     NgxPaginationModule,
     SmallAggregatedImageCardComponent,
-    AsyncPipe
+    AsyncPipe,
+    MatCheckbox,
+    MatButton
   ],
   templateUrl: './aggregated-image-list.component.html',
   styleUrl: './aggregated-image-list.component.css'
 })
-export class AggregatedImageListComponent implements OnInit {
+export class AggregatedImageListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
-  @Inject(DestroyRef) destroyRef?: DestroyRef;
-  images$: Observable<AggregatedImage[] | any> = this.aggregatedImagesService.aggregatedImages$;
+
   currentPage: number = 1;
   itemsPerPage: number = 100;
   totalItems: number = 0;
+  images$: Observable<AggregatedImage[] | any> = this.aggregatedImagesService.aggregatedImages$;
+  selectedImages = new Set<AggregatedImage>();
 
   constructor(
     private aggregatedImagesService: AggregatedImagesService,
@@ -38,24 +43,21 @@ export class AggregatedImageListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadImages(1, this.itemsPerPage);
+    this.loadImages(1);
     this.aggregatedImagesService.paginationData$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.currentPage = data.page;
         this.totalItems = data.total;
+        this.selectedImages.clear();
       });
   }
 
-  loadImages(pageIndex = 1, pageSize: number) {
+  loadImages(pageIndex = 1) {
     this.aggregatedImagesService.getAggregatedImages(pageIndex, this.itemsPerPage).subscribe(
       data => {
         this.totalItems = data.total;
       });
-  }
-
-  changePage(event: any) {
-    this.loadImages(event, this.itemsPerPage);
   }
 
   openLargeCard(image: AggregatedImage) {
@@ -68,4 +70,18 @@ export class AggregatedImageListComponent implements OnInit {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+
+  isSelected(image: AggregatedImage): boolean {
+    return this.selectedImages.has(image);
+  }
+
+  toggleSelection(image: AggregatedImage): void {
+    if (this.isSelected(image)) {
+      this.selectedImages.delete(image);
+    } else {
+      this.selectedImages.add(image);
+    }
+  }
+
 }

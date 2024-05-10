@@ -1,4 +1,4 @@
-<mat-card class="image-card" *ngIf="image">
+<mat-card class="ai-image-card-container" *ngIf="image">
   <img mat-card-image [src]="image.imageUrl" [alt]="image.altText || 'AI generated image'" appImageFallback>
   <mat-card-content>
     <h3>{{ image.provider.name }} <span *ngIf="image.provider.isTrusted">- Trusted</span></h3>

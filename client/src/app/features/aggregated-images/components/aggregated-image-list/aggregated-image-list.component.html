@@ -1,12 +1,31 @@
-<pagination-controls
-  id="aggregated"
-  (pageChange)="changePage($event)"
-></pagination-controls>
-<div class="ai-image-card-container">
-  <app-small-aggregated-image-card
-
+<div class="collection-controls">
+  <pagination-controls
+    id="aggregated"
+    (pageChange)="loadImages($event)"
+  ></pagination-controls>
+  <button
+    mat-button
+    color="primary"
+    mat-flat-button
+    class="select-all-button"
+  >
+    Select All
+  </button>
+</div>
+<div class="ai-image-cards-container">
+  <div
+    class="image-card"
     *ngFor="let image of images$ | async | paginate: { id: 'aggregated', itemsPerPage, currentPage, totalItems }"
-    [image]="image"
-    (click)="openLargeCard(image)"
-  ></app-small-aggregated-image-card>
+  >
+    <mat-checkbox
+      class="overlay-checkbox"
+      [checked]="isSelected(image)"
+      (change)="toggleSelection(image)"
+      color="primary"
+    ></mat-checkbox>
+    <app-small-aggregated-image-card
+      [image]="image"
+      (click)="openLargeCard(image)"
+    ></app-small-aggregated-image-card>
+  </div>
 </div>
