@@ -10,7 +10,7 @@ export abstract class AiGeneratedData {
   @Prop()
   model?: string;
 
-  @Prop({ type: Object, required: true })
+  @Prop({ type: Object })
   author?: {
     name: string;
     id?: string;

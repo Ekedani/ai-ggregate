@@ -113,12 +113,14 @@ export class AggregatedImagesService {
     metadata: any,
     image: Buffer,
   ) {
-    const author = { name: aggregatedImageDto.author };
+    const author = aggregatedImageDto.author
+      ? { name: aggregatedImageDto.author }
+      : null;
     delete aggregatedImageDto.author;
     const imageData = new this.aiGeneratedImageModel({
       ...aggregatedImageDto,
       ...metadata,
-      author,
+      ...(author && { author }),
     });
     const savedImageData = await imageData.save();
     const storageKey = `${savedImageData._id}.${savedImageData.format}`;
