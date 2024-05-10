@@ -1,3 +1,7 @@
+main {
+  padding: 20px;
+}
+
 .jobs-controller {
   display: flex;
   justify-content: space-between;

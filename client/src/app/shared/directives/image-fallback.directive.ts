@@ -12,6 +12,6 @@ export class ImageFallbackDirective {
 
   @HostListener('error')
   loadImageError() {
-    this.el.nativeElement.src = this.appImageFallback || 'assets/images/error.jpg';
+    this.el.nativeElement.src = this.appImageFallback || 'assets/img/error.jpg';
   }
 }

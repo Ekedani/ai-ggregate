@@ -16,7 +16,7 @@ export class JobService {
     let params = new HttpParams({
       fromObject: {
         page: page.toString(),
-        limit: '100',
+        limit: '20',
       }
     });
     if (status) {
