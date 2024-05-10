@@ -59,6 +59,16 @@ export class ModerationService {
     };
   }
 
+  async cancelModeration(imageIds: string[]) {
+    const approvedOrRejectedImages = await this.findImagesByIds(imageIds);
+    await this.updateImagesStatus(approvedOrRejectedImages, 'pending');
+    const pending = await this.removeReviewDate(approvedOrRejectedImages);
+    return {
+      success: pending,
+      failure: [],
+    };
+  }
+
   private async findImagesByIds(imageIds: string[]) {
     const uniqueImageIds = Array.from(new Set(imageIds));
     const objectIds = uniqueImageIds.map((id) => new Types.ObjectId(id));
@@ -83,6 +93,17 @@ export class ModerationService {
       {
         status,
         reviewedAt: new Date(),
+      },
+    );
+    return objectIds;
+  }
+
+  private async removeReviewDate(images: AiGeneratedImageDocument[]) {
+    const objectIds = images.map((image) => image._id);
+    await this.aiGeneratedImageModel.updateMany(
+      { _id: { $in: objectIds } },
+      {
+        $unset: { reviewedAt: '' },
       },
     );
     return objectIds;

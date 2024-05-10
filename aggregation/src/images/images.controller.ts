@@ -47,4 +47,12 @@ export class ImagesController {
     const { imageIds } = bulkImageModerationDto;
     return this.moderationService.rejectImages(imageIds);
   }
+
+  @Put('cancel')
+  public async cancelModeration(
+    @Body() bulkImageModerationDto: BulkImageModerationDto,
+  ) {
+    const { imageIds } = bulkImageModerationDto;
+    return this.moderationService.cancelModeration(imageIds);
+  }
 }
