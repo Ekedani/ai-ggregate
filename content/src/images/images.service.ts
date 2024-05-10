@@ -4,7 +4,7 @@ import { StorageService } from '../storage/storage.service';
 import { GetImagesDto } from './dto/get-images.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { AiGeneratedImage } from './schemas/ai-generated-image.schema';
-import { Model } from 'mongoose';
+import { Model, PipelineStage } from 'mongoose';
 import * as sharp from 'sharp';
 import { PostprocessingService } from '../postprocessing/postprocessing.service';
 import { ClassifiersService } from '../classifiers/classifiers.service';
@@ -36,11 +36,10 @@ export class ImagesService {
       image.buffer,
     );
 
-    const classification =
-      await this.classifierService.classifyImage(
-        image.buffer,
-        savedImage.format,
-      );
+    const classification = await this.classifierService.classifyImage(
+      image.buffer,
+      savedImage.format,
+    );
 
     savedImage.storageKey = storageKey;
     savedImage.classification = classification;
@@ -54,16 +53,8 @@ export class ImagesService {
   async findImages(getImagesDto: GetImagesDto) {
     const { page, limit } = getImagesDto;
     const matchStage = this.buildMatchStage(getImagesDto);
-    const resultsWithExtra = await this.getMatchedImages(
-      matchStage,
-      page,
-      limit,
-    );
-
-    const hasExtra = resultsWithExtra.length > limit;
-    const results = hasExtra ? resultsWithExtra.slice(0, -1) : resultsWithExtra;
-
-    return this.addPaginationData(results, page, hasExtra);
+    const results = await this.getMatchedImages(matchStage, page, limit);
+    return this.addPaginationData(results, page);
   }
 
   async findImageById(id: string) {
@@ -106,7 +97,7 @@ export class ImagesService {
       if (createdAfter) matchStage['createdAt']['$gt'] = createdAfter;
     }
 
-    if (provider) matchStage['provider'] = provider;
+    if (provider) matchStage['provider'] = { $regex: provider, $options: 'i' };
     if (format) matchStage['format'] = format;
     if (contentTags) matchStage['contentTags'] = { $in: contentTags };
     if (technicalTags) matchStage['technicalTags'] = { $in: technicalTags };
@@ -115,23 +106,27 @@ export class ImagesService {
   }
 
   private getMatchedImages(matchStage: any, page: number, limit: number) {
-    const pipeline = [
+    const pipeline: PipelineStage[] = [
       { $match: matchStage },
-      { $skip: (page - 1) * limit },
-      { $limit: limit + 1 },
+      {
+        $facet: {
+          metadata: [{ $count: 'total' }],
+          data: [
+            { $sort: { createdAt: -1 } },
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+          ],
+        },
+      },
     ];
     return this.aiGeneratedImageModel.aggregate(pipeline);
   }
 
-  private addPaginationData(result: any, page: number, hasExtra: boolean) {
-    const hasNextPage = hasExtra;
-    const hasPrevPage = page > 1;
-
+  private addPaginationData(result: any, page: number) {
     return {
-      count: result.length,
-      prevPage: hasPrevPage ? page - 1 : null,
-      nextPage: hasNextPage ? page + 1 : null,
-      images: result,
+      total: result[0].metadata[0]?.total || 0,
+      page,
+      images: result[0].data,
     };
   }
 
@@ -148,6 +143,7 @@ export class ImagesService {
         id: author.id,
         name: author.username,
       },
+      provider: 'AI-ggregate',
       dimensions: { width, height },
       size,
       format,

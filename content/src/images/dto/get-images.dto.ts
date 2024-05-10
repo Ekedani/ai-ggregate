@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDateString,
+  IsDate,
   IsIn,
   IsInt,
   IsOptional,
@@ -35,13 +35,13 @@ export class GetImagesDto {
   model?: string;
 
   @IsOptional()
-  @IsDateString()
   @Type(() => Date)
+  @IsDate()
   createdBefore?: Date;
 
   @IsOptional()
-  @IsDateString()
   @Type(() => Date)
+  @IsDate()
   createdAfter?: Date;
 
   @IsOptional()
@@ -54,11 +54,13 @@ export class GetImagesDto {
   format?: string;
 
   @IsOptional()
+  @Type(() => Array)
   @IsArray()
   @IsString({ each: true })
   contentTags?: string[];
 
   @IsOptional()
+  @Type(() => Array)
   @IsArray()
   @IsString({ each: true })
   technicalTags?: string[];

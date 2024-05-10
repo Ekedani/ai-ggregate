@@ -19,6 +19,7 @@ import { CreateImageDto } from './dto/create-image.dto';
 import { GetImagesDto } from './dto/get-images.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.guard';
+import { ValidateMongoIdPipe } from '../shared/pipes/validate-mongo-id.pipe';
 
 @Controller('images')
 export class ImagesController {
@@ -51,7 +52,7 @@ export class ImagesController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ValidateMongoIdPipe) id: string) {
     return this.imagesService.findImageById(id);
   }
 

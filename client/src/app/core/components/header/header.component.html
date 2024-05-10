@@ -8,7 +8,7 @@
   </button>
   <span>AI-ggregate</span>
   <div class="user-info" *ngIf="userInfo$ | async as userInfo">
-    <a mat-button [routerLink]="['/profile']">
+    <a mat-button [routerLink]="['users/', userInfo.id]">
       <mat-icon>account_circle</mat-icon>
       {{ userInfo.username }}
     </a>
