@@ -1,1 +1,27 @@
-<p>aggregation-job-list works!</p>
+<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<mat-card *ngFor="let job of jobs | paginate: { itemsPerPage: 10, currentPage: p }" class="job-card">
+  <mat-card-header>
+    <div>
+      <mat-card-title>Job #{{ job?._id }} - {{ job?.status }}</mat-card-title>
+      <mat-card-subtitle>
+        Started: {{ job.startedAt | date:'medium' }},
+        Finished: {{ job.finishedAt ? (job.finishedAt | date:'medium') : 'In progress' }},
+        Type: {{ job.type }}
+      </mat-card-subtitle>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngFor="let detail of job.dataSourceDetails" class="source-detail">
+      <mat-icon class="content-icon">{{ getContentTypeIcon(detail.contentType) }}</mat-icon>
+      <mat-icon class="status-icon">{{ getStatusIcon(detail.status) }}</mat-icon>
+      <span class="provider">Provider: {{ detail.provider }}</span>,
+      <span class="status">Status: {{ detail.status }}</span>,
+      <span class="content-type">Content: {{ detail.contentType }}</span>,
+      <span class="numbers">Fetched: {{ detail.fetched }}, Inserted: {{ detail.inserted }}</span>
+    </div>
+  </mat-card-content>
+  <mat-card-footer [ngClass]="{'success': isSuccess(job), 'failure': isFailure(job)}">
+    <mat-icon>{{ isSuccess(job) ? 'check_circle' : 'error' }}</mat-icon>
+    Status: {{ isSuccess(job) ? 'Success' : 'Failure' }}
+  </mat-card-footer>
+</mat-card>
