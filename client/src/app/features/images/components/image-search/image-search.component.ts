@@ -65,8 +65,6 @@ export class ImageSearchComponent {
       format: [''],
       contentTags: [[]],
       technicalTags: [[]],
-      page: [1],
-      limit: [100],
     });
   }
 

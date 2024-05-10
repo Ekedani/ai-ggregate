@@ -1,5 +1,10 @@
+<pagination-controls (pageChange)="getPage($event)" id="gallery"></pagination-controls>
 <ngx-masonry [options]="masonryOptions">
-  <div ngxMasonryItem class="grid-item" *ngFor="let image of $galleryImages | async">
+  <div
+    ngxMasonryItem class="grid-item"
+    *ngFor="let image of $galleryImages | async |
+    paginate: { id: 'gallery', itemsPerPage: 100, currentPage: page, totalItems: total }"
+  >
     <a [routerLink]="[image.id]">
       <img [src]="image.thumbnailUrl" [alt]="image.prompt ? image.prompt : 'Unknown prompt'">
       <div class="image-overlay">

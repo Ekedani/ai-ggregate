@@ -4,6 +4,10 @@ import {ImageFallbackDirective} from "../../../../shared/directives/image-fallba
 import {RouterLink} from "@angular/router";
 import {ImagesService} from "../../images.service";
 import {NgxMasonryModule, NgxMasonryOptions} from "ngx-masonry";
+import {NgxPaginationModule} from "ngx-pagination";
+import {Observable} from "rxjs";
+import {GalleryImage} from "../../interfaces/gallery-image";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -17,12 +21,15 @@ import {NgxMasonryModule, NgxMasonryOptions} from "ngx-masonry";
     RouterLink,
     NgxMasonryModule,
     AsyncPipe,
+    NgxPaginationModule,
   ],
   templateUrl: './image-gallery.component.html',
   styleUrl: './image-gallery.component.css'
 })
 export class ImageGalleryComponent {
-  $galleryImages = this.imagesService.galleryImages$;
+  $galleryImages: Observable<GalleryImage[] | any> = this.imagesService.galleryImages$;
+  page: string | number = 1;
+  total: string | number = 0;
 
   masonryOptions: NgxMasonryOptions = {
     columnWidth: '.grid-item',
@@ -31,6 +38,28 @@ export class ImageGalleryComponent {
     gutter: 0,
   }
 
-  constructor(private readonly imagesService: ImagesService) {
+  constructor(
+    private readonly imagesService: ImagesService,
+    private readonly toastrService: ToastrService,
+  ) {
+  }
+
+  ngOnInit() {
+    this.imagesService.paginationData$
+      .subscribe(
+        (data) => {
+          this.page = data.page;
+          this.total = data.total;
+        }
+      )
+  }
+
+  getPage($event: number) {
+    this.imagesService.getNewPage($event).subscribe({
+        error: (error) => {
+          this.toastrService.error(error.message, 'Error')
+        }
+      }
+    )
   }
 }
