@@ -2,9 +2,10 @@ import {Component} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {NgForOf} from "@angular/common";
 import {AggregatedImagesService} from "../../aggregated-images.service";
-import {AggregatedImageCardComponent} from "../aggregated-image-card/aggregated-image-card.component";
+import {LargeAggregatedImageCardComponent} from "../large-aggregated-image-card/large-aggregated-image-card.component";
 import {AggregatedImage} from "../../interfaces/aggregated-image";
 import {NgxPaginationModule} from "ngx-pagination";
+import {SmallAggregatedImageCardComponent} from "../small-aggregated-image-card/small-aggregated-image-card.component";
 
 @Component({
   selector: 'app-aggregated-image-list',
@@ -12,8 +13,9 @@ import {NgxPaginationModule} from "ngx-pagination";
   imports: [
     MatPaginator,
     NgForOf,
-    AggregatedImageCardComponent,
-    NgxPaginationModule
+    LargeAggregatedImageCardComponent,
+    NgxPaginationModule,
+    SmallAggregatedImageCardComponent
   ],
   templateUrl: './aggregated-image-list.component.html',
   styleUrl: './aggregated-image-list.component.css'

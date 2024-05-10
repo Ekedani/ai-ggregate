@@ -1,0 +1,25 @@
+.image-card {
+  max-height: 512px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+.mat-card-content {
+  overflow: hidden;
+}
+
+.mat-card-content h3, .mat-card-content p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 2px 0;
+}

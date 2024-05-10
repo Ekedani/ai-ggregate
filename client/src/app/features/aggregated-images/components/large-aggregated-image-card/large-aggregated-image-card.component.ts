@@ -38,9 +38,9 @@ import {AggregatedImage} from "../../interfaces/aggregated-image";
     DatePipe,
     SlicePipe
   ],
-  templateUrl: './aggregated-image-card.component.html',
-  styleUrl: './aggregated-image-card.component.css'
+  templateUrl: './large-aggregated-image-card.component.html',
+  styleUrl: './large-aggregated-image-card.component.css'
 })
-export class AggregatedImageCardComponent {
+export class LargeAggregatedImageCardComponent {
   @Input() image?: AggregatedImage;
 }
