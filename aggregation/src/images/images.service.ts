@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { AiGeneratedImage } from '../shared/schemas/ai-generated-image.schema';
-import { Model, Types } from 'mongoose';
+import { Model, PipelineStage, Types } from 'mongoose';
 import { GetImagesDto } from './dto/get-images.dto';
 
 @Injectable()
@@ -15,16 +15,9 @@ export class ImagesService {
     const { page, limit } = getImagesDto;
 
     const matchStage = this.buildMatchStage(getImagesDto);
-    const resultsWithExtra = await this.getMatchedImages(
-      matchStage,
-      page,
-      limit,
-    );
+    const results = await this.getMatchedImages(matchStage, page, limit);
 
-    const hasExtra = resultsWithExtra.length > limit;
-    const results = hasExtra ? resultsWithExtra.slice(0, -1) : resultsWithExtra;
-
-    return this.addPaginationData(results, page, hasExtra);
+    return this.addPaginationData(results, page);
   }
 
   public async getImageById(id: string) {
@@ -62,23 +55,23 @@ export class ImagesService {
   }
 
   private getMatchedImages(matchStage: any, page: number, limit: number) {
-    const pipeline = [
+    const pipeline: PipelineStage[] = [
       { $match: matchStage },
-      { $skip: (page - 1) * limit },
-      { $limit: limit + 1 },
+      {
+        $facet: {
+          metadata: [{ $count: 'total' }],
+          data: [{ $skip: (page - 1) * limit }, { $limit: limit }],
+        },
+      },
     ];
     return this.aiGeneratedImageModel.aggregate(pipeline);
   }
 
-  private addPaginationData(result: any[], page: number, hasExtra: boolean) {
-    const hasNextPage = hasExtra;
-    const hasPrevPage = page > 1;
-
+  private addPaginationData(result: any[], page: number) {
     return {
-      count: result.length,
-      prevPage: hasPrevPage ? page - 1 : null,
-      nextPage: hasNextPage ? page + 1 : null,
-      images: result,
+      total: result[0].metadata[0]?.total || 0,
+      page,
+      images: result[0].data,
     };
   }
 }

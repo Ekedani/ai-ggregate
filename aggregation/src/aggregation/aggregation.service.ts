@@ -38,16 +38,12 @@ export class AggregationService {
   ) {
     const { page, limit } = getAggregationJobsDto;
     const matchStage = this.buildMatchStage(getAggregationJobsDto);
-    const resultsWithExtra = await this.getMatchedAggregationJobs(
+    const results = await this.getMatchedAggregationJobs(
       matchStage,
       page,
       limit,
     );
-
-    const hasExtra = resultsWithExtra.length > limit;
-    const results = hasExtra ? resultsWithExtra.slice(0, -1) : resultsWithExtra;
-
-    return this.addPaginationData(results, page, hasExtra);
+    return this.addPaginationData(results, page);
   }
 
   public async getAggregationJobById(id: string) {
@@ -139,22 +135,25 @@ export class AggregationService {
   ) {
     const pipeline: PipelineStage[] = [
       { $match: matchStage },
-      { $sort: { startedAt: -1 } },
-      { $skip: (page - 1) * limit },
-      { $limit: limit + 1 },
+      {
+        $facet: {
+          metadata: [{ $count: 'total' }],
+          data: [
+            { $sort: { startedAt: -1 } },
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+          ],
+        },
+      },
     ];
     return this.aggregationJobModel.aggregate(pipeline);
   }
 
-  private addPaginationData(result: any[], page: number, hasExtra: boolean) {
-    const hasNextPage = hasExtra;
-    const hasPrevPage = page > 1;
-
+  private addPaginationData(result: any[], page: number) {
     return {
-      count: result.length,
-      prevPage: hasPrevPage ? page - 1 : null,
-      nextPage: hasNextPage ? page + 1 : null,
-      jobs: result,
+      total: result[0].metadata[0]?.total || 0,
+      page,
+      jobs: result[0].data,
     };
   }
 }

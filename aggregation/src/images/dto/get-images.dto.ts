@@ -4,12 +4,13 @@ import {
   IsIn,
   IsInt,
   IsMongoId,
+  IsNotEmpty,
   IsOptional,
   IsString,
   Max,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class GetImagesDto {
   @Type(() => Number)
@@ -50,13 +51,21 @@ export class GetImagesDto {
   model?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]), {
+    toClassOnly: true,
+  })
   @IsArray()
   @IsString({ each: true })
+  @IsNotEmpty({ each: true })
   contentTags?: string[];
 
   @IsOptional()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]), {
+    toClassOnly: true,
+  })
   @IsArray()
   @IsString({ each: true })
+  @IsNotEmpty({ each: true })
   technicalTags?: string[];
 
   @IsOptional()

@@ -12,6 +12,7 @@ import { GetImagesDto } from './dto/get-images.dto';
 import { BulkImageModerationDto } from './dto/bulk-image-moderation.dto';
 import { ModerationService } from './moderation.service';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.guard';
+import { ValidateMongoIdPipe } from '../shared/pipes/validate-mongo-id.pipe';
 
 @UseGuards(JwtAuthGuard)
 @Controller('images')
@@ -27,7 +28,7 @@ export class ImagesController {
   }
 
   @Get(':id')
-  public async getImageById(@Param('id') id: string) {
+  public async getImageById(@Param('id', ValidateMongoIdPipe) id: string) {
     return this.imagesService.getImageById(id);
   }
 
