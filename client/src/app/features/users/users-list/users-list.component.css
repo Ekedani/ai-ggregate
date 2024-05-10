@@ -1,0 +1,49 @@
+.user-list-container {
+  margin: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+.user-list {
+  list-style: none;
+  padding: 0;
+}
+
+.user-item {
+  background-color: #f9f9f9;
+  border: 1px solid #e1e1e1;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #555;
+}
+
+.user-role {
+  float: right;
+  color: #777;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.user-name:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+.user-item mat-icon {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+
+
