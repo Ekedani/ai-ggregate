@@ -14,6 +14,6 @@ export class GetAggregationJobsDto {
   limit: number;
 
   @IsOptional()
-  @IsIn(['running', 'success', 'failed'])
+  @IsIn(['running', 'finished'])
   status: string;
 }
