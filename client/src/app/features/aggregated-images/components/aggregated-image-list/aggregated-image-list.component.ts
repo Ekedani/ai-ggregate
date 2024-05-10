@@ -7,7 +7,7 @@ import {AggregatedImage} from "../../interfaces/aggregated-image";
 import {NgxPaginationModule} from "ngx-pagination";
 import {SmallAggregatedImageCardComponent} from "../small-aggregated-image-card/small-aggregated-image-card.component";
 import {MatDialog} from "@angular/material/dialog";
-import {Observable, Subject, takeUntil} from "rxjs";
+import {Observable, Subject, take, takeUntil} from "rxjs";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatButton} from "@angular/material/button";
 
@@ -49,11 +49,11 @@ export class AggregatedImageListComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.currentPage = data.page;
         this.totalItems = data.total;
-        this.selectedImages.clear();
       });
   }
 
   loadImages(pageIndex = 1) {
+    this.selectedImages.clear();
     this.aggregatedImagesService.getAggregatedImages(pageIndex, this.itemsPerPage).subscribe(
       data => {
         this.totalItems = data.total;
@@ -82,6 +82,19 @@ export class AggregatedImageListComponent implements OnInit, OnDestroy {
     } else {
       this.selectedImages.add(image);
     }
+  }
+
+  selectAllToggle(): void {
+    this.images$.pipe(
+      take(1)
+    ).subscribe(images => {
+      const allSelected = images.every((image: AggregatedImage) => this.selectedImages.has(image));
+      if (allSelected) {
+        images.forEach((image: AggregatedImage) => this.selectedImages.delete(image));
+      } else {
+        images.forEach((image: AggregatedImage) => this.selectedImages.add(image));
+      }
+    });
   }
 
 }
