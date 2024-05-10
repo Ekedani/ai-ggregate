@@ -25,12 +25,12 @@ export class PromptheroDataFetcher implements ImageFetcher {
       try {
         const response = await this.getPromptPageFromAPI(url);
         html = response.data;
+        const imageData = this.extractImageData(html);
+        imageData.publicationUrl = `https://prompthero.com${url}`;
+        imagesData.push(imageData);
       } catch (e) {
         continue;
       }
-      const imageData = this.extractImageData(html);
-      imageData.publicationUrl = `https://prompthero.com${url}`;
-      imagesData.push(imageData);
     }
     return imagesData;
   }
