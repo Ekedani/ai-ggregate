@@ -1,11 +1,11 @@
 <div class="user-container" *ngIf="user$ | async as user">
-  <h1>User Profile</h1>
+  <h2>User Profile</h2>
   <div class="user-details">
     <mat-icon class="user-placeholder-avatar">account_circle</mat-icon>
     <h2>{{ user.firstName }} {{ user.lastName }}</h2>
     <p>
       <mat-icon>person</mat-icon>
-      Username: {{ user.username }}
+      Username: &#64;{{ user.username }}
     </p>
     <p>
       <mat-icon>admin_panel_settings</mat-icon>
