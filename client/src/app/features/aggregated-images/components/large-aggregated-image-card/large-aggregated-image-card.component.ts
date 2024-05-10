@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {
   MatCard,
   MatCardContent,
@@ -17,6 +17,7 @@ import {
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
 import {AggregatedImage} from "../../interfaces/aggregated-image";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-aggregated-image-card',
@@ -42,5 +43,6 @@ import {AggregatedImage} from "../../interfaces/aggregated-image";
   styleUrl: './large-aggregated-image-card.component.css'
 })
 export class LargeAggregatedImageCardComponent {
-  @Input() image?: AggregatedImage;
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { image: AggregatedImage }) {
+  }
 }

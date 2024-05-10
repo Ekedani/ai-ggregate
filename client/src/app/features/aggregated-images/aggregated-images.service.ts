@@ -1,11 +1,19 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {BehaviorSubject, tap} from "rxjs";
+import {AggregatedImage} from "./interfaces/aggregated-image";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AggregatedImagesService {
-  private readonly apiUrl = 'http://localhost:80';
+  private aggregatedImagesBehaviorSubject = new BehaviorSubject<AggregatedImage[]>([]);
+  private paginationDataSubject = new BehaviorSubject<{ page: number, total: number }>({page: 1, total: 0});
+
+  private apiUrl = 'http://localhost:80';
+
+  public aggregatedImages$ = this.aggregatedImagesBehaviorSubject.asObservable();
+  public paginationData$ = this.paginationDataSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -22,7 +30,14 @@ export class AggregatedImagesService {
         page: pageIndex.toString(),
         limit: pageSize.toString()
       }
-    });
+    }).pipe(
+      tap(
+        (response) => {
+          this.aggregatedImagesBehaviorSubject.next(response.images);
+          this.paginationDataSubject.next({page: response.page, total: response.total})
+        }
+      )
+    );
   }
 
   approveImages(imageIds: string[]) {

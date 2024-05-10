@@ -1,4 +1,12 @@
-<pagination-controls></pagination-controls>
+<pagination-controls
+  id="aggregated"
+  (pageChange)="changePage($event)"
+></pagination-controls>
 <div class="ai-image-card-container">
-  <app-small-aggregated-image-card *ngFor="let image of images" [image]="image"></app-small-aggregated-image-card>
+  <app-small-aggregated-image-card
+
+    *ngFor="let image of images$ | async | paginate: { id: 'aggregated', itemsPerPage, currentPage, totalItems }"
+    [image]="image"
+    (click)="openLargeCard(image)"
+  ></app-small-aggregated-image-card>
 </div>

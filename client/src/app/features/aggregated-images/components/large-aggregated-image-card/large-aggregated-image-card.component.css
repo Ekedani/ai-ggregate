@@ -4,8 +4,8 @@
   align-items: center;
   width: 100%;
   max-width: 1000px;
-  margin-top: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .card-layout {
