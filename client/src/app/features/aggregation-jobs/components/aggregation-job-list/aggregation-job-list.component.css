@@ -1,9 +1,8 @@
-.success {
-  background-color: #d4edda;
-}
-
-.failure {
-  background-color: #f8d7da;
+.jobs-controller {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
 
 mat-card {
@@ -23,7 +22,7 @@ mat-card-content {
   gap: 5px;
 }
 
-mat-card-footer{
+mat-card-footer {
   padding: 7px;
   border-radius: 2px;
 }
@@ -49,9 +48,23 @@ mat-card-footer{
   font-size: 16px;
 }
 
+.success {
+  background-color: #d4edda;
+}
+
+.failure {
+  background-color: #f8d7da;
+}
+
+.running {
+  background-color: #b3e5fc;
+}
+
+
 .source-detail > * {
   display: flex;
   align-items: center;
 }
+
 
 

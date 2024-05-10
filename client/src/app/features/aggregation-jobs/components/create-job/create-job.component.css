@@ -1,0 +1,14 @@
+.form-container {
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+mat-form-field {
+  width: 100%;
+  display: block;
+}
+
+button {
+  margin-top: 20px;
+}

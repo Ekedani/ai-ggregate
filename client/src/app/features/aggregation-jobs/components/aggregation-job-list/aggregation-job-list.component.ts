@@ -14,6 +14,10 @@ import {JobService} from "../../aggregation-jobs.service";
 import {ToastrService} from "ngx-toastr";
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {FormsModule} from "@angular/forms";
+import {CreateJobComponent} from "../create-job/create-job.component";
 
 @Component({
   selector: 'app-aggregation-job-list',
@@ -30,14 +34,21 @@ import {MatTooltip} from "@angular/material/tooltip";
     MatTooltip,
     NgClass,
     MatCardSubtitle,
-    DatePipe
+    DatePipe,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatLabel,
+    FormsModule,
+    CreateJobComponent
   ],
   templateUrl: './aggregation-job-list.component.html',
   styleUrl: './aggregation-job-list.component.css'
 })
 export class AggregationJobListComponent implements OnInit {
   jobs: AggregationJob[] = [];
-  p: number = 1;
+  page: number = 1;
+  filterStatus?: string;
 
   constructor(
     private jobService: JobService,
@@ -50,8 +61,14 @@ export class AggregationJobListComponent implements OnInit {
   }
 
   loadJobs() {
-    this.jobService.getJobs(this.p).subscribe({
-      next: (response) => this.jobs = response.jobs,
+    this.jobService.getJobs(this.page, this.filterStatus).subscribe({
+      next: (response) => {
+        this.jobs = response.jobs
+        if (response.total === 0) {
+          this.page = 1;
+          this.toastrService.info('No jobs found', 'No jobs');
+        }
+      },
       error: (error) => this.toastrService.error(error.data, 'Failed to load jobs')
     });
   }
@@ -62,6 +79,10 @@ export class AggregationJobListComponent implements OnInit {
 
   isFailure(job: AggregationJob): boolean {
     return job.dataSourceDetails.every(detail => detail.status === 'failed');
+  }
+
+  isRunning(job: AggregationJob): boolean {
+    return job.status === 'running';
   }
 
   getContentTypeIcon(contentType: 'image' | 'text'): string {

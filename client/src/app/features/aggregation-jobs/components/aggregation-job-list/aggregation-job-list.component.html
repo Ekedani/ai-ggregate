@@ -1,5 +1,16 @@
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
-<mat-card *ngFor="let job of jobs | paginate: { itemsPerPage: 10, currentPage: p }" class="job-card">
+<app-create-job></app-create-job>
+<div class="jobs-controller">
+  <pagination-controls (pageChange)="page = $event"></pagination-controls>
+  <mat-form-field appearance="outline" style="margin-bottom: -1.25em">
+    <mat-label>Filter by Status</mat-label>
+    <mat-select (selectionChange)="loadJobs()" [(ngModel)]="filterStatus">
+      <mat-option value="">All</mat-option>
+      <mat-option value="running">Running</mat-option>
+      <mat-option value="finished">Finished</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<mat-card *ngFor="let job of jobs | paginate: { itemsPerPage: 10, currentPage: page }" class="job-card">
   <mat-card-header>
     <div>
       <mat-card-title>Job #{{ job?._id }} - {{ job?.status }}</mat-card-title>
@@ -20,8 +31,20 @@
       <span class="numbers">Fetched: {{ detail.fetched }}, Inserted: {{ detail.inserted }}</span>
     </div>
   </mat-card-content>
-  <mat-card-footer [ngClass]="{'success': isSuccess(job), 'failure': isFailure(job)}">
-    <mat-icon>{{ isSuccess(job) ? 'check_circle' : 'error' }}</mat-icon>
-    Status: {{ isSuccess(job) ? 'Success' : 'Failure' }}
+  <mat-card-footer [ngClass]="{
+    'success': isSuccess(job),
+    'failure': isFailure(job),
+    'running': isRunning(job)
+  }">
+    <mat-icon>
+      {{
+        isSuccess(job) ? 'check_circle' :
+          isFailure(job) ? 'error' : 'sync'
+      }}
+    </mat-icon>
+    Status: {{
+      isSuccess(job) ? 'Success' :
+        isFailure(job) ? 'Failure' : 'Running'
+    }}
   </mat-card-footer>
 </mat-card>
