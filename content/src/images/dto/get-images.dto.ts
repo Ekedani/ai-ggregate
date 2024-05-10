@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from "class-transformer";
 import {
   IsArray,
   IsDate,
@@ -54,13 +54,17 @@ export class GetImagesDto {
   format?: string;
 
   @IsOptional()
-  @Type(() => Array)
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]), {
+    toClassOnly: true,
+  })
   @IsArray()
   @IsString({ each: true })
   contentTags?: string[];
 
   @IsOptional()
-  @Type(() => Array)
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]), {
+    toClassOnly: true,
+  })
   @IsArray()
   @IsString({ each: true })
   technicalTags?: string[];
