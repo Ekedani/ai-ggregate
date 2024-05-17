@@ -1,0 +1,17 @@
+<div class="user-list-container">
+  <h2>Explore users</h2>
+  <p>With the help of this dashboard, you can explore other users' generations, as well as contact administrators to
+    report irregularities or recognition errors</p>
+  <ul class="user-list">
+    <li *ngFor="let user of users$ | async" class="user-item">
+      <a [routerLink]="['/users', user.id]" class="user-name">
+        <mat-icon>person</mat-icon>
+        {{ user.firstName }} {{ user.lastName }} (&#64;{{ user.username }})
+      </a>
+      <span class="user-role" *ngIf="user.role">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Role: {{ user.role }}
+      </span>
+    </li>
+  </ul>
+</div>

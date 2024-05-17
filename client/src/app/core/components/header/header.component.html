@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+  <button
+    mat-icon-button class="example-icon"
+    aria-label="Example icon-button with menu icon"
+    (click)="onToggleClick()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>AI-ggregate</span>
+  <div class="user-info" *ngIf="userInfo$ | async as userInfo">
+    <a mat-button [routerLink]="['users/', userInfo.id]">
+      <mat-icon>account_circle</mat-icon>
+      {{ userInfo.username }}
+    </a>
+    <button mat-button (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      Logout
+    </button>
+  </div>
+</mat-toolbar>
+

@@ -1,0 +1,8 @@
+.venv
+Dockerfile
+.dockerignore
+.idea
+__pycache__
+dataset
+plots
+model_training.py

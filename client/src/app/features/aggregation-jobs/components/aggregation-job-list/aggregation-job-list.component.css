@@ -1,0 +1,74 @@
+main {
+  padding: 20px;
+}
+
+.jobs-controller {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+mat-card {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+mat-card-footer {
+  padding: 7px;
+  border-radius: 2px;
+}
+
+.job-icon, .content-icon, .status-icon {
+  font-size: 20px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.source-detail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.provider, .status, .content-type, .numbers {
+  margin-left: 10px;
+  line-height: 1.5;
+}
+
+.success, .failure {
+  font-size: 16px;
+}
+
+.success {
+  background-color: #d4edda;
+}
+
+.failure {
+  background-color: #f8d7da;
+}
+
+.running {
+  background-color: #b3e5fc;
+}
+
+
+.source-detail > * {
+  display: flex;
+  align-items: center;
+}
+
+
+

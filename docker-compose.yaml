@@ -1,0 +1,70 @@
+version: "3.8"
+services:
+    ai-image-classifier:
+        image: ekedani/ai-image-classifier:0.2
+
+    users:
+        image: ekedani/dp-users:0.3
+        environment:
+            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
+            JWT_PRIVATE_KEY_BASE64: ${JWT_PRIVATE_KEY_BASE64}
+            USERS_DB_HOST: ${USERS_DB_HOST}
+            USERS_DB_PORT: ${USERS_DB_PORT}
+            USERS_DB_USERNAME: ${USERS_DB_USERNAME}
+            USERS_DB_PASSWORD: ${USERS_DB_PASSWORD}
+            USERS_DB_NAME: ${USERS_DB_NAME}
+
+    postprocessing:
+        image: ekedani/dp-postprocessing:0.1
+        environment:
+            CONTENT_DB_URI: ${CONTENT_DB_URI}
+            GOOGLE_VISION_API_KEY: ${GOOGLE_VISION_API_KEY}
+            MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+            MINIO_PORT: ${MINIO_PORT}
+            MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+            MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+
+    content:
+        image: ekedani/dp-content:0.9
+        environment:
+            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
+            CONTENT_DB_URI: ${CONTENT_DB_URI}
+            MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+            MINIO_PORT: ${MINIO_PORT}
+            MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+            MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+            AI_IMAGE_CLASSIFIER_SERVICE_URL: http://ai-image-classifier:5000
+            POSTPROCESSING_SERVICE_URL: http://postprocessing:5000
+            USERS_SERVICE_URL: http://users:3000
+        depends_on:
+            - users
+            - postprocessing
+            - ai-image-classifier
+
+    aggregation:
+        image: ekedani/dp-aggregation:0.4
+        environment:
+            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
+            STAGING_DB_URI: ${STAGING_DB_URI}
+            USERS_SERVICE_URL: http://users:3000
+            CONTENT_SERVICE_URL: http://content:3000
+        depends_on:
+            - users
+            - content
+
+    gateway:
+        image: ekedani/dp-gateway:0.3
+        ports:
+            - "80:3000"
+        environment:
+            JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
+            USERS_SERVICE_URL: http://users:3000
+            CONTENT_SERVICE_URL: http://content:3000
+            AGGREGATION_SERVICE_URL: http://aggregation:3000
+            AI_IMAGE_CLASSIFIER_SERVICE_URL: http://ai-image-classifier:5000
+        depends_on:
+            - users
+            - postprocessing
+            - content
+            - aggregation
+            - ai-image-classifier

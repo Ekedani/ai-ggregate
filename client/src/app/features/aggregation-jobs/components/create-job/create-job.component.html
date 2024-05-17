@@ -1,0 +1,12 @@
+<div class="form-container">
+  <form (ngSubmit)="submitForm()">
+    <mat-form-field appearance="fill">
+      <mat-label>Select Image Providers</mat-label>
+      <mat-select [(ngModel)]="selectedProviders" name="imageProviders" multiple>
+        <mat-option *ngFor="let provider of providers" [value]="provider">{{ provider }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Create Job</button>
+  </form>
+</div>

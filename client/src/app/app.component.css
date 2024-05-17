@@ -1,0 +1,32 @@
+:host {
+  height: 100%;
+  display: block;
+}
+
+mat-sidenav-container {
+  display: block;
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  flex: 1 0;
+}
+
+mat-sidenav {
+  padding: 8px;
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

@@ -1,0 +1,50 @@
+<article class="card" *ngIf="image">
+  <div class="card-body">
+    <figure class="card-figure">
+      <img
+        class="card-image"
+        [src]="imageSrc"
+        [alt]="imageAlt"
+      >
+    </figure>
+    <div class="card-content">
+      <header class="card-header">
+        <h1 class="card-title">{{ image.author?.name || 'Unknown author' }} via {{ image.provider }}</h1>
+        <p>{{ image.createdAt | date:'medium' }}</p>
+      </header>
+      <div class="card-details">
+        <p *ngIf="image.prompt"><strong>Prompt:</strong> {{ image.prompt }}</p>
+        <p *ngIf="image.negativePrompt"><strong>Negative Prompt:</strong> {{ image.negativePrompt }}</p>
+        <p *ngIf="image.model"><strong>Model:</strong> {{ image.model }}</p>
+        <p *ngIf="image.classification"><strong>Label:</strong> {{ image.classification.label }}
+          (Confidence: {{ image.classification.confidence | number:'1.0-2' }} via {{ image.classification.model }})
+        </p>
+        <p><strong>Dimensions:</strong> {{ image.dimensions.width }} x {{ image.dimensions.height }}</p>
+        <p><strong>Format:</strong> {{ image.format }}, <strong>Size:</strong> {{ image.size }} bytes</p>
+        <p *ngIf="image.storageKey"><strong>Storage Key:</strong> {{ image.storageKey }}</p>
+        <p *ngIf="image.originalId"><strong>Original ID:</strong> {{ image.originalId }}</p>
+        <p *ngIf="image.provider"><strong>Provider:</strong> {{ image.provider }}</p>
+        <p *ngIf="image.publicationUrl" class="card-links">
+          <a mat-raised-button color="primary" href="{{ image.publicationUrl }}" target="_blank">
+            <mat-icon>feed</mat-icon>
+            Original Publication
+          </a>
+          <a mat-raised-button color="primary" href="{{ image.originalImageUrl }}" target="_blank">
+            <mat-icon>link</mat-icon>
+            Original Image
+          </a>
+        </p>
+        <p *ngIf="image.contentTags && image.contentTags.length > 0"><strong>Content Tags:</strong>
+          <mat-chip-set>
+            <mat-chip *ngFor="let tag of image.contentTags">{{ tag }}</mat-chip>
+          </mat-chip-set>
+        </p>
+        <p *ngIf="image.technicalTags && image.technicalTags.length > 0"><strong>Technical Tags:</strong>
+          <mat-chip-set>
+            <mat-chip *ngFor="let tag of image.technicalTags">{{ tag }}</mat-chip>
+          </mat-chip-set>
+        </p>
+      </div>
+    </div>
+  </div>
+</article>

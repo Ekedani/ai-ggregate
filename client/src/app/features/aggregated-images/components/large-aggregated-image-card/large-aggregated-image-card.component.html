@@ -1,0 +1,35 @@
+<mat-card class="ai-image-card" *ngIf="data.image">
+  <div class="card-layout">
+    <img
+      mat-card-image
+      [src]="data.image.imageUrl"
+      [alt]="data.image.altText || 'AI generated image'"
+      class="ai-image"
+      appImageFallback
+    >
+    <div class="card-info">
+      <mat-card-header>
+        <mat-card-title>{{ data.image.provider.name }}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-icon *ngIf="data.image.provider.isTrusted">verified_user</mat-icon>
+          {{ data.image.provider.isTrusted ? 'Trusted' : 'Not Trusted' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p *ngIf="data.image.dimensions"><b>Dimensions:</b> {{ data.image.dimensions.width }} x {{ data.image.dimensions.height }}
+        </p>
+        <p *ngIf="data.image.format"><b>Format:</b> {{ data.image.format }}</p>
+        <p *ngIf="data.image.prompt"><b>Prompt:</b> {{ data.image.prompt }}</p>
+        <p *ngIf="data.image.negativePrompt"><b>Negative Prompt:</b> {{ data.image.negativePrompt }}</p>
+        <p *ngIf="data.image.model"><b>Model:</b> {{ data.image.model }}</p>
+        <p *ngIf="data.image.author"><b>Author:</b> {{ data.image.author }}</p>
+        <p *ngIf="data.image.createdAt"><b>Created:</b> {{ data.image.createdAt | date:'medium' }}</p>
+        <p *ngIf="data.image.publicationUrl"><b>Publication:</b> <a [href]="data.image.publicationUrl">Link</a></p>
+        <p *ngIf="data.image.status"><b>Status:</b> {{ data.image.status }}</p>
+        <p *ngIf="data.image.reviewedAt"><b>Reviewed:</b> {{ data.image.reviewedAt | date:'medium' }}</p>
+        <p *ngIf="data.image.contentTags?.length"><b>Content Tags:</b> {{ data.image.contentTags?.join(', ') }}</p>
+        <p *ngIf="data.image.technicalTags?.length"><b>Technical Tags:</b> {{ data.image.technicalTags?.join(', ') }}</p>
+      </mat-card-content>
+    </div>
+  </div>
+</mat-card>

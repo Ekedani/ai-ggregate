@@ -1,0 +1,54 @@
+ngx-masonry {
+  width: 100%;
+}
+
+.grid-item {
+  float: left;
+  width: 20%;
+  max-height: 512px;
+  overflow: hidden;
+  position: relative;
+}
+
+.grid-item img {
+  width: 100%;
+  display: block;
+  height: auto;
+}
+
+.grid-item .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.grid-item .image-overlay .image-prompt {
+  margin: 0;
+  font-size: 1em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+}
+
+.grid-item .image-overlay .author-name {
+  margin: 2px 0 0;
+  font-size: 0.75em;
+  opacity: 0.75;
+}
+
+.grid-item:hover .image-overlay {
+  cursor: pointer;
+  opacity: 1;
+}
