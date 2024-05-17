@@ -28,7 +28,8 @@ export class AggregatedImagesService {
     }>(`${this.apiUrl}/aggregation/images`, {
       params: {
         page: pageIndex.toString(),
-        limit: pageSize.toString()
+        limit: pageSize.toString(),
+        status: 'pending'
       }
     }).pipe(
       tap(
@@ -41,14 +42,14 @@ export class AggregatedImagesService {
   }
 
   approveImages(imageIds: string[]) {
-    return this.http.post(`${this.apiUrl}/aggregation/images/approve`, {imageIds});
+    return this.http.put(`${this.apiUrl}/aggregation/images/approval`, {imageIds});
   }
 
   rejectImages(imageIds: string[]) {
-    return this.http.post(`${this.apiUrl}/aggregation/images/reject`, {imageIds});
+    return this.http.put(`${this.apiUrl}/aggregation/images/rejection`, {imageIds});
   }
 
   cancelModeration(imageIds: string[]) {
-    return this.http.post(`${this.apiUrl}/aggregation/images/cancel`, {imageIds});
+    return this.http.put(`${this.apiUrl}/aggregation/images/cancel`, {imageIds});
   }
 }

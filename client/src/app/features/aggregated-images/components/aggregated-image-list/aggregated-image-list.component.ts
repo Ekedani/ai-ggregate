@@ -10,6 +10,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {Observable, Subject, take, takeUntil} from "rxjs";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatButton} from "@angular/material/button";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-aggregated-image-list',
@@ -38,7 +39,8 @@ export class AggregatedImageListComponent implements OnInit, OnDestroy {
 
   constructor(
     private aggregatedImagesService: AggregatedImagesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private toastrService: ToastrService
   ) {
   }
 
@@ -97,4 +99,31 @@ export class AggregatedImageListComponent implements OnInit, OnDestroy {
     });
   }
 
+  rejectSelected() {
+    this.aggregatedImagesService.rejectImages(Array.from(this.selectedImages).map(image => image._id)).subscribe(
+      {
+        next: () => {
+          this.toastrService.success('Images rejected');
+          this.loadImages(this.currentPage);
+        },
+        error: (error) => {
+          this.toastrService.error(error.data, 'Error rejecting images');
+        }
+      }
+    );
+  }
+
+  approveSelected() {
+    this.aggregatedImagesService.approveImages(Array.from(this.selectedImages).map(image => image._id)).subscribe(
+      {
+        next: () => {
+          this.toastrService.success('Images approved');
+          this.loadImages(this.currentPage);
+        },
+        error: (error) => {
+          this.toastrService.error(error.data, 'Error approving images');
+        }
+      }
+    );
+  }
 }

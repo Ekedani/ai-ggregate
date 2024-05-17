@@ -1,6 +1,7 @@
 import {Provider} from "./provider";
 
 export interface AggregatedData {
+  _id: string;
   provider: Provider;
   aggregationJob?: string;
   originalId?: string;

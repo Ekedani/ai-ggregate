@@ -3,15 +3,37 @@
     id="aggregated"
     (pageChange)="loadImages($event)"
   ></pagination-controls>
-  <button
-    mat-button
-    color="primary"
-    mat-flat-button
-    class="select-all-button"
-    (click)="selectAllToggle()"
-  >
-    Select All
-  </button>
+  <div class="selection-controls">
+    <button
+      mat-button
+      color="primary"
+      mat-flat-button
+      class="select-all-button"
+      (click)="selectAllToggle()"
+    >
+      Select All
+    </button>
+    <button
+      [disabled]="!selectedImages.size"
+      mat-button
+      color="accent"
+      mat-flat-button
+      class="approve-button"
+      (click)="approveSelected()"
+    >
+      Approve
+    </button>
+    <button
+      [disabled]="!selectedImages.size"
+      mat-button
+      color="warn"
+      mat-flat-button
+      class="reject-button"
+      (click)="rejectSelected()"
+    >
+      Reject
+    </button>
+  </div>
 </div>
 <div class="ai-image-cards-container">
   <div
