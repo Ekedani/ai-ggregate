@@ -13,15 +13,18 @@ import {LoginComponent} from "./features/auth/components/login/login.component";
 import {RegisterComponent} from "./features/auth/components/register/register.component";
 import {UserComponent} from "./features/users/user/user.component";
 import {authGuard} from "./core/guards/auth.guard";
+import {noAuthGuard} from "./core/guards/no-auth.guard";
 
 export const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [noAuthGuard]
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
+    canActivate: [noAuthGuard]
   },
   {
     path: 'content/images/:id',
