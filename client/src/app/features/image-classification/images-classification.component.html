@@ -1,16 +1,16 @@
 <div class="container">
   <mat-card class="left-panel">
     <mat-card-header>
-      <mat-card-title>Classify Image</mat-card-title>
-      <mat-card-subtitle>Upload an image in .png, .jpg, .jpeg or .webp format to see if it is AI-generated. Models are
-        not 100% accurate and are being constantly refined
+      <mat-card-title>Класифікувати зображення</mat-card-title>
+      <mat-card-subtitle>Завантажте зображення у форматі .png, .jpg, .jpeg або .webp, щоб перевірити, чи згенероване
+        воно штучним інтелектом. Моделі не на 100% точні і постійно вдосконалюються
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="form-row">
           <mat-form-field appearance="fill" class="full-width">
-            <mat-label>Model Version</mat-label>
+            <mat-label>Версія моделі для класифікації</mat-label>
             <mat-select formControlName="modelVersion">
               <mat-option value="resnet34_image_classifier_v1">resnet34_image_classifier_v1</mat-option>
               <mat-option value="resnet34_image_classifier_v2">resnet34_image_classifier_v2</mat-option>
@@ -21,7 +21,7 @@
         </div>
         <div class="form-row">
           <mat-form-field appearance="fill" class="full-width file-upload">
-            <input matInput [value]="fileName ?? null" placeholder="No file selected" disabled/>
+            <input matInput [value]="fileName ?? null" placeholder="Файл не обрано" disabled/>
             <button
               mat-button
               matSuffix
@@ -30,13 +30,13 @@
               (click)="fileInput.click()"
             >
               <mat-icon>folder_open</mat-icon>
-              Upload
+              Завантажити
             </button>
             <input type="file" #fileInput hidden (change)="onFileSelect($event)">
           </mat-form-field>
         </div>
         <div class="form-row">
-          <button mat-raised-button color="primary" type="submit">Classify Image</button>
+          <button mat-raised-button color="primary" type="submit">Класифіквати зображення</button>
         </div>
       </form>
       <div class="form-row">
@@ -48,9 +48,8 @@
   </mat-card>
   <mat-card class="right-panel">
     <mat-card-header>
-      <mat-card-title>Classification Results</mat-card-title>
-      <mat-card-subtitle>Here you will see the classification results, including the probability that your image is
-        AI-generated
+      <mat-card-title>Результати класифікації</mat-card-title>
+      <mat-card-subtitle>Тут ви побачите результати класифікації, включаючи ймовірність того, що ваше зображення ШІ-генероване
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="result-content">
@@ -67,7 +66,7 @@
           </mat-list-item>
         </mat-list>
         <ng-template #noClassificationRan>
-          <p>Please submit an image for classification</p>
+          <p>Будь ласка, завантажте зображення для класифікації</p>
         </ng-template>
       </div>
     </mat-card-content>

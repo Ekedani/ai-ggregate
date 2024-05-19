@@ -42,7 +42,7 @@ services:
             - ai-image-classifier
 
     aggregation:
-        image: ekedani/dp-aggregation:0.4
+        image: ekedani/dp-aggregation:0.5
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             STAGING_DB_URI: ${STAGING_DB_URI}
