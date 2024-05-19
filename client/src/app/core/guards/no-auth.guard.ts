@@ -11,9 +11,9 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
     map(isLoggedIn => {
       if (isLoggedIn) {
         router.navigate(['/'], {queryParams: {returnUrl: state.url}});
-        return true;
+        return false;
       }
-      return false;
+      return true;
     })
   );
 };
