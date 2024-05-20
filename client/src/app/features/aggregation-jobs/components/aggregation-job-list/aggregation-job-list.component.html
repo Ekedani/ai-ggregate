@@ -2,7 +2,7 @@
   <app-create-job></app-create-job>
   <div class="jobs-controller">
     <pagination-controls
-      (pageChange)="page=$event"
+      (pageChange)="changePage($event)"
       nextLabel="Наступна"
       previousLabel="Попередня"
     ></pagination-controls>
@@ -15,7 +15,7 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <mat-card *ngFor="let job of jobs | paginate: { itemsPerPage: 20, currentPage: page }" class="job-card">
+  <mat-card *ngFor="let job of jobs | paginate: { itemsPerPage: 20, currentPage: page, totalItems: total }" class="job-card">
     <mat-card-header>
       <div>
         <mat-card-title>Задача #{{ job?._id }} - {{ job?.status }}</mat-card-title>

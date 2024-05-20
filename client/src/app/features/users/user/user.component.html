@@ -17,4 +17,9 @@
       Роль: {{ user.role }}
     </p>
   </div>
+  <pagination-controls
+    (pageChange)="page=$event"
+    previousLabel="Попередня"
+    nextLabel="Наступна">
+  </pagination-controls>
 </div>

@@ -48,6 +48,7 @@ import {CreateJobComponent} from "../create-job/create-job.component";
 export class AggregationJobListComponent implements OnInit {
   jobs: AggregationJob[] = [];
   page: number = 1;
+  total: number = 0;
   filterStatus?: string;
 
   constructor(
@@ -64,6 +65,7 @@ export class AggregationJobListComponent implements OnInit {
     this.jobService.getJobs(this.page, this.filterStatus).subscribe({
       next: (response) => {
         this.jobs = response.jobs
+        this.total = response.total;
         if (response.total === 0) {
           this.page = 1;
           this.toastrService.info('No jobs found', 'No jobs');
@@ -100,5 +102,10 @@ export class AggregationJobListComponent implements OnInit {
       default:
         return 'help_outline';
     }
+  }
+
+  changePage($event: number) {
+    this.page = $event;
+    this.loadJobs();
   }
 }
