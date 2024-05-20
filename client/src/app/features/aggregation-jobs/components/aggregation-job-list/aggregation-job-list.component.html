@@ -1,7 +1,11 @@
 <main>
   <app-create-job></app-create-job>
   <div class="jobs-controller">
-    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    <pagination-controls
+      (pageChange)="page=$event"
+      nextLabel="Наступна"
+      previousLabel="Попередня"
+    ></pagination-controls>
     <mat-form-field appearance="outline" style="margin-bottom: -1.25em">
       <mat-label>Фільтрація за статусом</mat-label>
       <mat-select (selectionChange)="loadJobs()" [(ngModel)]="filterStatus">
