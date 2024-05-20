@@ -17,9 +17,42 @@
       Роль: {{ user.role }}
     </p>
   </div>
-  <pagination-controls
-    (pageChange)="page=$event"
-    previousLabel="Попередня"
-    nextLabel="Наступна">
-  </pagination-controls>
+  <ng-container *ngIf="images$ | async as images">
+    <div *ngIf="images.length !== 0" class="gallery">
+      <h2
+        *ngIf="isPersonalProfile$ | async; else userImages"
+      >Мої зображення</h2>
+      <ng-template #userImages>
+        <h2>Зображення користувача</h2>
+      </ng-template>
+      <div class="gallery-controls">
+        <pagination-controls
+          (pageChange)="pageChange($event)"
+          previousLabel="Попередня"
+          nextLabel="Наступна">
+        </pagination-controls>
+        <button
+          *ngIf="isPersonalProfile$ | async"
+          mat-raised-button
+          color="primary"
+          >
+          <mat-icon>upload</mat-icon>
+          Завантажити
+        </button>
+      </div>
+      <div class="gallery-grid">
+        <div
+          *ngFor="let image of images | paginate: {
+          itemsPerPage: 100,
+          currentPage: imagesPage,
+          totalItems: imagesTotal
+        }"
+          class="gallery-item"
+        ><a [routerLink]="['/content/images', image.id]">
+          <img [src]="image.thumbnailUrl" [alt]="image.prompt">
+        </a>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </div>

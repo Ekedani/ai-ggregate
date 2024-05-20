@@ -1,27 +1,29 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {combineLatest, map, Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {UsersService} from '../users.service';
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {AuthService} from "../../../core/services/auth.service";
-import {AiGeneratedImage} from "../../images/interfaces/ai-generated-image";
 import {ImagesService} from "../../images/images.service";
 import {NgxPaginationModule} from "ngx-pagination";
+import {GalleryImage} from "../../images/interfaces/gallery-image";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [AsyncPipe, NgIf, MatIcon, NgxPaginationModule, NgForOf],
+  imports: [AsyncPipe, NgIf, MatIcon, NgxPaginationModule, NgForOf, RouterLink, MatButton],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
   user$?: Observable<any>;
   isPersonalProfile$?: Observable<boolean>;
-  images$?: Observable<AiGeneratedImage[]>;
-  page: number = 1;
+  images$?: Observable<GalleryImage[]>;
+  imagesPage: number = 1;
+  imagesTotal: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,12 +48,27 @@ export class UserComponent implements OnInit {
       map(([params, userInfo]) => params.get('id') === userInfo?.id)
     );
 
+    this.loadImages();
+  }
+
+  loadImages() {
     this.images$ = this.route.paramMap.pipe(
       switchMap(params => {
         const userId = params.get('id');
-        return this.imagesService.getUserImages(userId, this.page);
+        return this.imagesService.getImagesByAuthor(userId, this.imagesPage).pipe(
+          map(response => {
+            this.imagesTotal = response.total;
+            this.imagesPage = response.page;
+            return response.images;
+          })
+        );
       })
     );
+  }
+
+  pageChange($event: number) {
+    this.imagesPage = $event;
+    this.loadImages();
   }
 }
 

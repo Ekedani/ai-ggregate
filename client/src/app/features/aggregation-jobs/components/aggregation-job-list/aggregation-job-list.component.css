@@ -70,5 +70,13 @@ mat-card-footer {
   align-items: center;
 }
 
+pagination-controls::ng-deep ul {
+  padding-left: 0;
+}
+
+pagination-controls::ng-deep .current {
+  background-color: #3F51B5;
+}
+
 
 

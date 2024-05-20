@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {AiGeneratedImage} from "./interfaces/ai-generated-image";
-import {BehaviorSubject, catchError, Observable, tap, throwError} from "rxjs";
+import {BehaviorSubject, map, Observable, tap} from "rxjs";
 import {GalleryImage} from "./interfaces/gallery-image";
 
 @Injectable({
@@ -15,11 +15,20 @@ export class ImagesService {
   public paginationData$ = this.paginationDataSubject.asObservable();
   public searchQuery: { [key: string]: string | string[] } = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
-  private fetchImages(params: { [key: string]: any }): Observable<{ page: number, total: number, images: AiGeneratedImage[] }> {
+  private fetchImages(params: { [key: string]: any }): Observable<{
+    page: number,
+    total: number,
+    images: AiGeneratedImage[]
+  }> {
     const httpParams = new HttpParams({fromObject: params});
-    return this.http.get<{ page: number, total: number, images: AiGeneratedImage[] }>(`${this.apiUrl}/content/images`, {params: httpParams})
+    return this.http.get<{
+      page: number,
+      total: number,
+      images: AiGeneratedImage[]
+    }>(`${this.apiUrl}/content/images`, {params: httpParams})
       .pipe(
         tap(data => {
           this.galleryImagesSubject.next(this.convertToGalleryImages(data.images));
@@ -38,6 +47,37 @@ export class ImagesService {
     return this.fetchImages(queryParams);
   }
 
+  getImage(id: string): Observable<AiGeneratedImage> {
+    return this.http.get<AiGeneratedImage>(`${this.apiUrl}/content/images/${id}`);
+  }
+
+  getImageUrl(image: AiGeneratedImage) {
+    return `${this.apiUrl}/content/storage/images/${image.storageKey}`;
+  }
+
+  getImagesByAuthor(authorId: string | null, page: number, limit: number = 100): Observable<{
+    images: GalleryImage[],
+    page: number,
+    total: number
+  }> {
+    this.searchQuery = {
+      authorId: authorId || '',
+      page: page.toString(),
+      limit: limit.toString()
+    };
+    return this.fetchImages(this.searchQuery).pipe(
+      map(
+        response => {
+          return {
+            images: this.convertToGalleryImages(response.images),
+            page: response.page,
+            total: response.total
+          }
+        }
+      )
+    );
+  }
+
   private convertToGalleryImages(images: AiGeneratedImage[]): GalleryImage[] {
     const storageUrl = `${this.apiUrl}/content/storage`;
     return images.map(image => ({
@@ -47,13 +87,5 @@ export class ImagesService {
       storageUrl: `${storageUrl}/images/${image.storageKey}`,
       thumbnailUrl: `${storageUrl}/thumbnails/${image.thumbnailKey}`
     }));
-  }
-
-  getImage(id: string): Observable<AiGeneratedImage> {
-    return this.http.get<AiGeneratedImage>(`${this.apiUrl}/content/images/${id}`);
-  }
-
-  getImageUrl(image: AiGeneratedImage) {
-    return `${this.apiUrl}/content/storage/images/${image.storageKey}`;
   }
 }
