@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {AiGeneratedImage} from "./interfaces/ai-generated-image";
-import {BehaviorSubject, Observable, tap} from "rxjs";
+import {BehaviorSubject, catchError, Observable, tap, throwError} from "rxjs";
 import {GalleryImage} from "./interfaces/gallery-image";
 
 @Injectable({
@@ -15,54 +15,28 @@ export class ImagesService {
   public paginationData$ = this.paginationDataSubject.asObservable();
   public searchQuery: { [key: string]: string | string[] } = {};
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  searchImages(query: { [key: string]: string | string[] }): Observable<{
-    page: number,
-    total: number,
-    images: AiGeneratedImage[]
-  }> {
-    this.searchQuery = query;
-    const params = new HttpParams({fromObject: {...query, page: '1', limit: '100'}});
-    return this.http.get<{
-      page: number,
-      total: number,
-      images: AiGeneratedImage[]
-    }>(`${this.apiUrl}/content/images`, {params})
-      .pipe(tap({
-        next: (data) => {
-          const galleryImages = this.convertToGalleryImages(data.images);
-          this.galleryImagesSubject.next(galleryImages);
+  private fetchImages(params: { [key: string]: any }): Observable<{ page: number, total: number, images: AiGeneratedImage[] }> {
+    const httpParams = new HttpParams({fromObject: params});
+    return this.http.get<{ page: number, total: number, images: AiGeneratedImage[] }>(`${this.apiUrl}/content/images`, {params: httpParams})
+      .pipe(
+        tap(data => {
+          this.galleryImagesSubject.next(this.convertToGalleryImages(data.images));
           this.paginationDataSubject.next({page: data.page, total: data.total});
-        }
-      }));
+        }),
+      );
   }
 
-  getNewPage(page: number): Observable<{
-    page: number,
-    total: number,
-    images: AiGeneratedImage[]
-  }> {
-    const params = new HttpParams({fromObject: {...this.searchQuery, page: page.toString(), limit: '100'}});
-    return this.http.get<{
-      page: number,
-      total: number,
-      images: AiGeneratedImage[]
-    }>(`${this.apiUrl}/content/images`, {params})
-      .pipe(tap({
-        next: (data) => {
-          const galleryImages = this.convertToGalleryImages(data.images);
-          this.galleryImagesSubject.next(galleryImages);
-          this.paginationDataSubject.next({page: data.page, total: data.total});
-        }
-      }));
+  searchImages(query: { [key: string]: string | string[] }, limit: number = 100): Observable<any> {
+    this.searchQuery = {...query, page: '1', limit: limit.toString()};
+    return this.fetchImages(this.searchQuery);
   }
 
-  getImage(id: string): Observable<AiGeneratedImage> {
-    return this.http.get<AiGeneratedImage>(`${this.apiUrl}/content/images/${id}`);
+  getNewPage(page: number, limit: number = 100): Observable<any> {
+    const queryParams = {...this.searchQuery, page: page.toString(), limit};
+    return this.fetchImages(queryParams);
   }
-
 
   private convertToGalleryImages(images: AiGeneratedImage[]): GalleryImage[] {
     const storageUrl = `${this.apiUrl}/content/storage`;
@@ -73,6 +47,10 @@ export class ImagesService {
       storageUrl: `${storageUrl}/images/${image.storageKey}`,
       thumbnailUrl: `${storageUrl}/thumbnails/${image.thumbnailKey}`
     }));
+  }
+
+  getImage(id: string): Observable<AiGeneratedImage> {
+    return this.http.get<AiGeneratedImage>(`${this.apiUrl}/content/images/${id}`);
   }
 
   getImageUrl(image: AiGeneratedImage) {
