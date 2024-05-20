@@ -1,7 +1,12 @@
 import { ImageFetcher } from '../image-fetcher.interface';
 import { AiGeneratedImage } from '../../../shared/schemas/ai-generated-image.schema';
 import { CheerioAPI, load } from 'cheerio';
-import puppeteer, { Page } from 'puppeteer';
+import { Page } from 'puppeteer';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const puppeteer = require('puppeteer-extra');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 
 export class MidjourneyDataFetcher implements ImageFetcher {
   provider = {
@@ -10,9 +15,9 @@ export class MidjourneyDataFetcher implements ImageFetcher {
   };
 
   public async fetchData(): Promise<AiGeneratedImage[]> {
+    puppeteer.use(StealthPlugin());
     const browser = await puppeteer.launch({
-      headless: false,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: true,
     });
     const page = await browser.newPage();
     await page.setViewport({
@@ -28,7 +33,6 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     await page.goto('https://www.midjourney.com/showcase');
     const detailPageUrls = await this.monitorAndCaptureUrls(page);
     const imagesData: AiGeneratedImage[] = [];
-
     for (const url of detailPageUrls) {
       await page.goto(url);
       await this.waitUntilImageDataLoaded(page);
@@ -60,7 +64,7 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     const observerHandle = await page.evaluateHandle(() => {
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          mutation.addedNodes.forEach((node) => {
+          const mutatedImageNodesCallback = (node: Node) => {
             if (
               node instanceof HTMLElement &&
               node.matches('div:has(> a.block.bg-cover)')
@@ -69,32 +73,34 @@ export class MidjourneyDataFetcher implements ImageFetcher {
               const fullUrl = `https://www.midjourney.com${linkElement.getAttribute('href')}`;
               (window as any).saveUrl(fullUrl);
             }
-          });
+          };
+          mutation.addedNodes.forEach(mutatedImageNodesCallback);
+          mutation.removedNodes.forEach(mutatedImageNodesCallback);
         });
       });
       observer.observe(document.body, { childList: true, subtree: true });
       return observer;
     });
 
-    await this.scrollElementToEnd(page, 'pageScroll');
+    await this.scrollGalleryToEnd(page, 'pageScroll');
     await observerHandle.evaluate((observer: MutationObserver) =>
       observer.disconnect(),
     );
     return Array.from(urls);
   }
 
-  private async scrollElementToEnd(page: Page, elementId: string) {
+  private async scrollGalleryToEnd(page: Page, elementId: string) {
     await page.evaluate(async (elementId) => {
-      const element = document.getElementById(elementId);
+      const galleryElement = document.getElementById(elementId);
       return new Promise<void>((resolve) => {
-        let lastScrollTop = element.scrollTop;
+        let lastScrollTop = galleryElement.scrollTop;
         const interval = setInterval(() => {
-          element.scrollBy(0, 100);
-          if (element.scrollTop === lastScrollTop) {
+          galleryElement.scrollBy(0, 100);
+          if (galleryElement.scrollTop === lastScrollTop) {
             clearInterval(interval);
             resolve();
           } else {
-            lastScrollTop = element.scrollTop;
+            lastScrollTop = galleryElement.scrollTop;
           }
         }, 500);
       });
