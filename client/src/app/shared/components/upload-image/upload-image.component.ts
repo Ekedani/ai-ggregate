@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {
-  MatChip, MatChipEvent,
+  MatChip,
+  MatChipEvent,
   MatChipGrid,
   MatChipInput,
   MatChipInputEvent,
@@ -15,6 +16,9 @@ import {MatIcon} from "@angular/material/icon";
 import {MatButton} from "@angular/material/button";
 import {NgForOf, NgIf} from "@angular/common";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {ImagesService} from "../../../features/images/images.service";
+import {ToastrService} from "ngx-toastr";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-upload-image',
@@ -34,6 +38,7 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
     MatChipGrid,
     MatChipInput,
     MatChipRow,
+    MatSuffix,
   ],
   templateUrl: './upload-image.component.html',
   styleUrl: './upload-image.component.css'
@@ -45,7 +50,12 @@ export class UploadImageComponent implements OnInit {
   tagsSeparatorKeysCodes: number[] = [ENTER, COMMA];
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private imageService: ImagesService,
+    private toastrService: ToastrService,
+    private dialogRef: MatDialogRef<UploadImageComponent>,
+  ) {
   }
 
   ngOnInit(): void {
@@ -94,6 +104,18 @@ export class UploadImageComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.form.value);
+    if (this.form.valid) {
+      this.imageService.uploadImage(this.form.value).subscribe({
+          next: () => {
+            this.toastrService.success('Image uploaded successfully');
+            this.dialogRef.close();
+          },
+          error: error => {
+            this.toastrService.error('Error uploading image');
+            this.dialogRef.close();
+          }
+        }
+      );
+    }
   }
 }

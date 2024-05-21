@@ -17,9 +17,9 @@
 }
 
 .file-upload {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
+  display: block;
 }
 
+.file-upload button {
+  margin-right: 20px;
+}

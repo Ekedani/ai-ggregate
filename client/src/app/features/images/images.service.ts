@@ -88,4 +88,16 @@ export class ImagesService {
       thumbnailUrl: `${storageUrl}/thumbnails/${image.thumbnailKey}`
     }));
   }
+
+  uploadImage(value: { model: string, prompt: string, negativePrompt: string, technicalTags: string[], image: File }) {
+    const formData = new FormData();
+    formData.append('model', value.model);
+    formData.append('prompt', value.prompt);
+    if (value.negativePrompt)
+      formData.append('negativePrompt', value.negativePrompt);
+    if (value.technicalTags.length > 0)
+      value.technicalTags.forEach(tag => formData.append('technicalTags', tag));
+    formData.append('image', value.image, value.image.name);
+    return this.http.post(`${this.apiUrl}/content/images`, formData);
+  }
 }

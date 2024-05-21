@@ -42,12 +42,17 @@
 
   <div class="form-row">
     <mat-form-field appearance="fill" class="full-width file-upload">
-      <input matInput [value]="fileName ?? 'Файл не обрано'" placeholder="Файл не обрано" disabled/>
-      <button mat-raised-button color="primary" (click)="fileInput.click()">
-        <mat-icon>folder_open</mat-icon>
-        Завантажити
+      <input matInput [value]="fileName ?? null" placeholder="Файл не обрано" disabled/>
+      <button
+        mat-button
+        matSuffix
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="fileInput.click()"
+      ><mat-icon>upload</mat-icon>Завантажити
       </button>
-      <input type="file" #fileInput hidden (change)="onImageSelect($event)" accept="image/*">
+      <input type="file" #fileInput hidden (change)="onImageSelect($event)">
     </mat-form-field>
   </div>
 

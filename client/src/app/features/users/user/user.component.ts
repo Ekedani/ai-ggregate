@@ -75,8 +75,11 @@ export class UserComponent implements OnInit {
   }
 
   onUploadImage() {
-    this.dialog.open(UploadImageComponent, {
-      width: '720px'
+    const dialogRef = this.dialog.open(UploadImageComponent, {
+      width: '720px',
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadImages();
     });
   }
 }
