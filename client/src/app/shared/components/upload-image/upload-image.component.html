@@ -1,0 +1,55 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+  <h2>Завантажити нове ШІ-генероване зображення</h2>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Model</mat-label>
+    <input matInput formControlName="model" placeholder="Enter model name">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Prompt</mat-label>
+    <input matInput formControlName="prompt" placeholder="Enter prompt">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Negative Prompt</mat-label>
+    <input matInput formControlName="negativePrompt" placeholder="Enter negative prompt">
+  </mat-form-field>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Technical Tags</mat-label>
+      <mat-chip-grid #technicalTags>
+        <mat-chip-row
+          *ngFor="let tag of form.get('technicalTags')?.value"
+          [removable]="true"
+          (removed)="removeTag($event)"
+        >
+          {{ tag }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input
+          matInput
+          [matChipInputFor]="technicalTags"
+          [matChipInputSeparatorKeyCodes]="tagsSeparatorKeysCodes"
+          (matChipInputTokenEnd)="addTag($event)"
+        >
+      </mat-chip-grid>
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="fill" class="full-width file-upload">
+      <input matInput [value]="fileName ?? 'Файл не обрано'" placeholder="Файл не обрано" disabled/>
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
+        <mat-icon>folder_open</mat-icon>
+        Завантажити
+      </button>
+      <input type="file" #fileInput hidden (change)="onImageSelect($event)" accept="image/*">
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+</form>

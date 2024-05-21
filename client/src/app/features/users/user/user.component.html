@@ -35,6 +35,7 @@
           *ngIf="isPersonalProfile$ | async"
           mat-raised-button
           color="primary"
+          (click)="onUploadImage()"
           >
           <mat-icon>upload</mat-icon>
           Завантажити

@@ -10,6 +10,8 @@ import {ImagesService} from "../../images/images.service";
 import {NgxPaginationModule} from "ngx-pagination";
 import {GalleryImage} from "../../images/interfaces/gallery-image";
 import {MatButton} from "@angular/material/button";
+import {MatDialog} from "@angular/material/dialog";
+import {UploadImageComponent} from "../../../shared/components/upload-image/upload-image.component";
 
 @Component({
   selector: 'app-user',
@@ -30,6 +32,7 @@ export class UserComponent implements OnInit {
     private usersService: UsersService,
     private authService: AuthService,
     private imagesService: ImagesService,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -69,6 +72,12 @@ export class UserComponent implements OnInit {
   pageChange($event: number) {
     this.imagesPage = $event;
     this.loadImages();
+  }
+
+  onUploadImage() {
+    this.dialog.open(UploadImageComponent, {
+      width: '720px'
+    });
   }
 }
 

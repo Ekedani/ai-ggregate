@@ -26,11 +26,10 @@
               mat-button
               matSuffix
               mat-raised-button
-              color="primary" type="button"
+              color="primary"
+              type="button"
               (click)="fileInput.click()"
-            >
-              <mat-icon>folder_open</mat-icon>
-              Завантажити
+            ><mat-icon>upload</mat-icon>Завантажити
             </button>
             <input type="file" #fileInput hidden (change)="onFileSelect($event)">
           </mat-form-field>
