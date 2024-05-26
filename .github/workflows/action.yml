@@ -37,12 +37,14 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+      - name: Define repository name
+        run: echo "REPO_NAME=${{ secrets.DOCKER_HUB_USERNAME }}/dp-${{ matrix.service }}" >> $GITHUB_ENV
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.service }}
           file: ${{ matrix.service }}/Dockerfile
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ 'dp-' + matrix.service }}:${{ github.sha }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ 'dp-' + matrix.service }}:latest
+            ${{ env.REPO_NAME }}:${{ github.sha }}
+            ${{ env.REPO_NAME }}:latest
           push: true
