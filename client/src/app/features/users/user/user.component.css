@@ -42,3 +42,61 @@ mat-icon {
   vertical-align: middle;
   margin-right: 5px;
 }
+
+.gallery {
+  margin-top: 20px;
+}
+
+.gallery-grid {
+  display: grid;
+  place-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.gallery-item {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gallery-item a {
+  display: block;
+  height: 100%;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
+
+.gallery-item:hover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.gallery-item:hover img {
+  cursor: pointer;
+}
+
+.gallery-controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+pagination-controls::ng-deep ul {
+  padding-left: 0;
+}
+
+pagination-controls::ng-deep .current {
+  background-color: #3F51B5;
+}

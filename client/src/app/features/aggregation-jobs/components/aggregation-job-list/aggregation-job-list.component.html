@@ -1,24 +1,28 @@
 <main>
   <app-create-job></app-create-job>
   <div class="jobs-controller">
-    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    <pagination-controls
+      (pageChange)="changePage($event)"
+      nextLabel="Наступна"
+      previousLabel="Попередня"
+    ></pagination-controls>
     <mat-form-field appearance="outline" style="margin-bottom: -1.25em">
-      <mat-label>Filter by Status</mat-label>
+      <mat-label>Фільтрація за статусом</mat-label>
       <mat-select (selectionChange)="loadJobs()" [(ngModel)]="filterStatus">
-        <mat-option value="">All</mat-option>
-        <mat-option value="running">Running</mat-option>
-        <mat-option value="finished">Finished</mat-option>
+        <mat-option value="">Всі</mat-option>
+        <mat-option value="running">Виконуються</mat-option>
+        <mat-option value="finished">Завершені</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
-  <mat-card *ngFor="let job of jobs | paginate: { itemsPerPage: 20, currentPage: page }" class="job-card">
+  <mat-card *ngFor="let job of jobs | paginate: { itemsPerPage: 20, currentPage: page, totalItems: total }" class="job-card">
     <mat-card-header>
       <div>
-        <mat-card-title>Job #{{ job?._id }} - {{ job?.status }}</mat-card-title>
+        <mat-card-title>Задача #{{ job?._id }} - {{ job?.status }}</mat-card-title>
         <mat-card-subtitle>
-          Started: {{ job.startedAt | date:'medium' }},
-          Finished: {{ job.finishedAt ? (job.finishedAt | date:'medium') : 'In progress' }},
-          Type: {{ job.type }}
+          Розпочато: {{ job.startedAt | date:'medium' }},
+          Завершено: {{ job.finishedAt ? (job.finishedAt | date:'medium') : 'Виконується' }},
+          Тип: {{ job.type }}
         </mat-card-subtitle>
       </div>
     </mat-card-header>
@@ -26,10 +30,10 @@
       <div *ngFor="let detail of job.dataSourceDetails" class="source-detail">
         <mat-icon class="content-icon">{{ getContentTypeIcon(detail.contentType) }}</mat-icon>
         <mat-icon class="status-icon">{{ getStatusIcon(detail.status) }}</mat-icon>
-        <span class="provider">Provider: {{ detail.provider }}</span>,
-        <span class="status">Status: {{ detail.status }}</span>,
-        <span class="content-type">Content: {{ detail.contentType }}</span>,
-        <span class="numbers">Fetched: {{ detail.fetched }}, Inserted: {{ detail.inserted }}</span>
+        <span class="provider">Провайдер: {{ detail.provider }}</span>,
+        <span class="status">Статус: {{ detail.status }}</span>,
+        <span class="content-type">Контент: {{ detail.contentType }}</span>,
+        <span class="numbers">Зібрано: {{ detail.fetched }}, Завантажено: {{ detail.inserted }}</span>
       </div>
     </mat-card-content>
     <mat-card-footer [ngClass]="{
@@ -44,7 +48,7 @@
               isFailure(job) ? 'error' : 'help'
         }}
       </mat-icon>
-      Status: {{
+      Статус: {{
         isRunning(job) ? 'Running' :
           isSuccess(job) ? 'Success' :
             isFailure(job) ? 'Failure' : 'Unknown'

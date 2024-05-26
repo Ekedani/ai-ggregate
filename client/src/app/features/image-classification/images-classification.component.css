@@ -5,7 +5,8 @@
 }
 
 .left-panel, .right-panel {
-  flex: 1;
+  flex: 1 1 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .uploaded-image {
@@ -40,11 +41,6 @@ mat-card {
 
 mat-card-content {
   margin-top: 8px;
-}
-
-.left-panel, .right-panel {
-  flex: 1 1 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 mat-form-field button {

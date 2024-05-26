@@ -80,7 +80,7 @@ export class ImageSearchComponent {
     const tag = (event.value || '').trim();
     if (tag) {
       const tags = this.searchQueryForm.get(tagsType);
-      tags?.setValue([...tags?.value, tag]);
+      tags?.setValue([...(tags?.value || []), tag]);
     }
     event.chipInput!.clear();
   }

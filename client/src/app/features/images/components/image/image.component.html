@@ -9,7 +9,7 @@
     </figure>
     <div class="card-content">
       <header class="card-header">
-        <h1 class="card-title">{{ image.author?.name || 'Unknown author' }} via {{ image.provider }}</h1>
+        <h1 class="card-title">{{ image.author?.name || 'Невідомий автор' }} via {{ image.provider }}</h1>
         <p>{{ image.createdAt | date:'medium' }}</p>
       </header>
       <div class="card-details">
@@ -27,11 +27,11 @@
         <p *ngIf="image.publicationUrl" class="card-links">
           <a mat-raised-button color="primary" href="{{ image.publicationUrl }}" target="_blank">
             <mat-icon>feed</mat-icon>
-            Original Publication
+            Оригінальна публікація
           </a>
           <a mat-raised-button color="primary" href="{{ image.originalImageUrl }}" target="_blank">
             <mat-icon>link</mat-icon>
-            Original Image
+            Оригінальне зображення
           </a>
         </p>
         <p *ngIf="image.contentTags && image.contentTags.length > 0"><strong>Content Tags:</strong>

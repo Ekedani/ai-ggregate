@@ -25,7 +25,7 @@ services:
             MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
 
     content:
-        image: ekedani/dp-content:0.9
+        image: ekedani/dp-content:0.10
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             CONTENT_DB_URI: ${CONTENT_DB_URI}
@@ -42,7 +42,7 @@ services:
             - ai-image-classifier
 
     aggregation:
-        image: ekedani/dp-aggregation:0.4
+        image: ekedani/dp-aggregation:0.7
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             STAGING_DB_URI: ${STAGING_DB_URI}

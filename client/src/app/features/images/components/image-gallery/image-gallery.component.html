@@ -1,4 +1,9 @@
-<pagination-controls (pageChange)="getPage($event)" id="gallery"></pagination-controls>
+<pagination-controls
+  (pageChange)="getPage($event)"
+  id="gallery"
+  nextLabel="Наступна"
+  previousLabel="Попередня"
+></pagination-controls>
 <ngx-masonry [options]="masonryOptions">
   <div
     ngxMasonryItem class="grid-item"
