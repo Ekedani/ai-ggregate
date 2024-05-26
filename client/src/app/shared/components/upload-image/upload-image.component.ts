@@ -75,7 +75,7 @@ export class UploadImageComponent implements OnInit {
   addTag($event: MatChipInputEvent): void {
     const tag = ($event.value || '').trim();
     if (tag) {
-      this.tags.setValue([...this.tags?.value, tag]);
+      this.tags.setValue([...(this.tags?.value || []), tag]);
     }
     $event.chipInput!.clear();
   }

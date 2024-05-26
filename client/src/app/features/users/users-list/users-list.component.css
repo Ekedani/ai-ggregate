@@ -21,18 +21,13 @@ h1 {
 
 .user-name {
   font-weight: bold;
-  color: #555;
+  color: #3F51B5;
+  text-decoration: none;
 }
 
 .user-role {
   float: right;
   color: #777;
-}
-
-.user-name {
-  font-weight: bold;
-  color: #3F51B5;
-  text-decoration: none;
 }
 
 .user-name:hover {
