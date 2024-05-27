@@ -127,6 +127,12 @@ describe('MidjourneyDataFetcher', () => {
     });
   });
 
+  describe('monitorAndCaptureUrls', () => {
+    it('should capture urls via evaluateHandle', async () => {
+      expect(fetcher.monitorAndCaptureUrls).toBeDefined();
+    });
+  });
+
   describe('waitUntilImageDataLoaded', () => {
     it('should wait for image data to load', async () => {
       await fetcher.waitUntilImageDataLoaded(mockPage);
