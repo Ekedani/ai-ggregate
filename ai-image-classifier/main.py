@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 models = {}
 
 
-def load_models():
+def load_genai_image_classifiers():
     model_dir = 'models'
     for model_file in os.listdir(model_dir):
         if model_file.endswith('.pkl'):
@@ -26,8 +26,8 @@ def load_models():
             models[model_name] = load_learner(os.path.join(model_dir, model_file))
 
 
-load_models()
-BEST_MODEL = 'resnet34_image_classifier_v4'
+load_genai_image_classifiers()
+BEST_CLASSIFIER = 'resnet34_image_classifier_v4'
 
 
 def get_prediction(model, request):
@@ -57,7 +57,7 @@ def get_prediction(model, request):
 
 @app.route('/prediction', methods=['POST'])
 def predict_using_best_model():
-    return get_prediction(BEST_MODEL, request)
+    return get_prediction(BEST_CLASSIFIER, request)
 
 
 @app.route('/<model>/prediction', methods=['POST'])
