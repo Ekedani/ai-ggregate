@@ -4,15 +4,7 @@ on:
   push:
     branches: [ "master" ]
     paths:
-      - 'aggregation/**'
-      - 'ai-image-classifier/**'
-      - 'content/**'
-      - 'gateway/**'
-      - 'postprocessing/**'
-      - 'users/**'
-  pull_request:
-    branches: [ "master" ]
-    paths:
+      - '.github/workflows/docker_build_push.yml'
       - 'aggregation/**'
       - 'ai-image-classifier/**'
       - 'content/**'
@@ -25,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [aggregation, ai-image-classifier, client, content, gateway, postprocessing, users]
+        service: [aggregation, ai-image-classifier, content, gateway, postprocessing, users]
     steps:
       - uses: actions/checkout@v3
       - name: Login to DockerHub
