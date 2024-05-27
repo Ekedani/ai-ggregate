@@ -104,7 +104,7 @@ export class AuthService {
     const userAuthData = await this.userAuthDataRepository.findOne({
       where: { id: decoded.sub },
     });
-    if (!userAuthData || !userAuthData.refreshToken) {
+    if (!userAuthData?.refreshToken) {
       throw new UnauthorizedException();
     }
     const isRefreshTokenMatching = await compare(token, userAuthData.refreshToken);
