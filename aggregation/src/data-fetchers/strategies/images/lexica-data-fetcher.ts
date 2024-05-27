@@ -67,22 +67,26 @@ export class LexicaDataFetcher implements ImageFetcher {
 
   private async setMutationObserver(page: Page) {
     return page.evaluateHandle(() => {
+      const processNode = (node) => {
+        if (
+          node instanceof HTMLElement &&
+          node.matches('div[role="gridcell"]')
+        ) {
+          const url = node.querySelector('a')?.href;
+          if (url) {
+            (window as any).saveUrl(url);
+          }
+        }
+      };
+
+      const processMutation = (mutation) => {
+        mutation.addedNodes.forEach(processNode);
+      };
+
       const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          mutation.addedNodes.forEach((node) => {
-            console.log(node);
-            if (
-              node instanceof HTMLElement &&
-              node.matches('div[role="gridcell"]')
-            ) {
-              const url = node.querySelector('a')?.href;
-              if (url) {
-                (window as any).saveUrl(url);
-              }
-            }
-          });
-        });
+        mutations.forEach(processMutation);
       });
+
       observer.observe(document.body, { childList: true, subtree: true });
       return observer;
     });

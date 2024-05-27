@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Next,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Next, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RequestHandler } from 'http-proxy-middleware';
 import { IncomingMessage, ServerResponse } from 'http';
@@ -20,7 +12,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('image classifiers')
 @ApiBearerAuth('Access Token')
