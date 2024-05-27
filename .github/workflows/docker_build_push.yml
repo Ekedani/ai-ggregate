@@ -6,7 +6,6 @@ on:
     paths:
       - 'aggregation/**'
       - 'ai-image-classifier/**'
-      - 'client/**'
       - 'content/**'
       - 'gateway/**'
       - 'postprocessing/**'
@@ -16,7 +15,6 @@ on:
     paths:
       - 'aggregation/**'
       - 'ai-image-classifier/**'
-      - 'client/**'
       - 'content/**'
       - 'gateway/**'
       - 'postprocessing/**'
