@@ -58,35 +58,43 @@ export class MidjourneyDataFetcher implements ImageFetcher {
 
   private async monitorAndCaptureUrls(page: Page): Promise<string[]> {
     const urls = new Set<string>();
+
     await page.exposeFunction('saveUrl', (url: string) => {
       urls.add(url);
     });
 
-    const observerHandle = await page.evaluateHandle(() => {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          const mutatedImageNodesCallback = (node: Node) => {
-            if (
-              node instanceof HTMLElement &&
-              node.matches('div:has(> a.block.bg-cover)')
-            ) {
-              const linkElement = node.querySelector('a.block.bg-cover');
-              const fullUrl = `https://www.midjourney.com${linkElement.getAttribute('href')}`;
-              (window as any).saveUrl(fullUrl);
-            }
-          };
-          mutation.addedNodes.forEach(mutatedImageNodesCallback);
-          mutation.removedNodes.forEach(mutatedImageNodesCallback);
-        });
+    const processNode = (node: Node) => {
+      if (
+        node instanceof HTMLElement &&
+        node.matches('div:has(> a.block.bg-cover)')
+      ) {
+        const linkElement = node.querySelector('a.block.bg-cover');
+        if (linkElement) {
+          const fullUrl = `https://www.midjourney.com${linkElement.getAttribute('href')}`;
+          (window as any).saveUrl(fullUrl);
+        }
+      }
+    };
+
+    const mutationCallback = (mutations: MutationRecord[]) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach(processNode);
+        mutation.removedNodes.forEach(processNode);
       });
+    };
+
+    const observerHandle = await page.evaluateHandle(() => {
+      const observer = new MutationObserver((window as any).mutationCallback);
       observer.observe(document.body, { childList: true, subtree: true });
       return observer;
     });
 
+    await page.exposeFunction('mutationCallback', mutationCallback);
     await this.scrollGalleryToEnd(page, 'pageScroll');
     await observerHandle.evaluate((observer: MutationObserver) =>
       observer.disconnect(),
     );
+
     return Array.from(urls);
   }
 
