@@ -107,7 +107,7 @@ export class AuthService {
     if (!userAuthData || !userAuthData.refreshToken) {
       throw new UnauthorizedException();
     }
-    const isRefreshTokenMatching = compare(token, userAuthData.refreshToken);
+    const isRefreshTokenMatching = await compare(token, userAuthData.refreshToken);
     if (!isRefreshTokenMatching) {
       throw new UnauthorizedException();
     }
