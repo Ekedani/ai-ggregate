@@ -20,6 +20,10 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  /**
+   * Registers a new web service user.
+   * @param registerDto - The registration data transfer object containing user information.
+   */
   async register(registerDto: RegisterDto) {
     const { password } = registerDto;
 
@@ -29,6 +33,12 @@ export class AuthService {
     await this.usersService.registerUser(registerDto);
   }
 
+  /**
+   * Authenticates a web service users
+   * @param loginDto - The login data transfer object containing email and password.
+   * @returns An object containing the access token and refresh token.
+   * @throws UnauthorizedException if the user is not found or the password is incorrect.
+   */
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
@@ -53,6 +63,12 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  /**
+   * Refreshes the pair of tokens using the provided refresh token.
+   * @param refreshToken - The refresh token.
+   * @returns An object containing the new access token and refresh token.
+   * @throws UnauthorizedException if the refresh token is invalid.
+   */
   async refresh(refreshToken: string) {
     try {
       const user = await this.retrieveUserByRefreshToken(refreshToken);
@@ -66,14 +82,27 @@ export class AuthService {
     }
   }
 
+  /**
+   * Logs out a user by clearing the refresh token.
+   * @param userId - The ID of the user to log out.
+   */
   async logout(userId: string): Promise<void> {
     await this.userAuthDataRepository.update(userId, { refreshToken: null });
   }
 
+  /**
+   * Retrieves the public key used for JWT verification.
+   * @returns The public key as a string.
+   */
   getPublicKey() {
     return this.configService.get('JWT_PUBLIC_KEY');
   }
 
+  /**
+   * Generates an access token for a user.
+   * @param user - The user entity.
+   * @returns The generated access token as a string.
+   */
   private async generateAccessToken(user: User): Promise<string> {
     const payload = {
       sub: user.id,
@@ -83,6 +112,11 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
+  /**
+   * Generates a refresh token for a user.
+   * @param user - The user entity.
+   * @returns The generated refresh token as a string.
+   */
   private async generateRefreshToken(user: User): Promise<string> {
     const payload = { sub: user.id };
     const refreshToken = this.jwtService.sign(payload, {
@@ -99,6 +133,12 @@ export class AuthService {
     return refreshToken;
   }
 
+  /**
+   * Retrieves a user by its refresh token.
+   * @param token - The refresh token.
+   * @returns The user entity.
+   * @throws UnauthorizedException if the token is invalid or does not match the stored hash.
+   */
   private async retrieveUserByRefreshToken(token: string): Promise<User> {
     const decoded = this.jwtService.verify(token);
     const userAuthData = await this.userAuthDataRepository.findOne({
@@ -107,7 +147,10 @@ export class AuthService {
     if (!userAuthData?.refreshToken) {
       throw new UnauthorizedException();
     }
-    const isRefreshTokenMatching = await compare(token, userAuthData.refreshToken);
+    const isRefreshTokenMatching = await compare(
+      token,
+      userAuthData.refreshToken,
+    );
     if (!isRefreshTokenMatching) {
       throw new UnauthorizedException();
     }

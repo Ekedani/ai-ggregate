@@ -14,6 +14,12 @@ export class UsersService {
     private userAuthDataRepository: Repository<UserAuthData>,
   ) {}
 
+  /**
+   * Registers a new web service user.
+   * @param registerDto - The registration data transfer object containing user information.
+   * @returns The created user.
+   * @throws An error if the transaction fails.
+   */
   async registerUser(registerDto: RegisterDto): Promise<User> {
     const { email, password, username, firstName, lastName } = registerDto;
 
@@ -44,6 +50,10 @@ export class UsersService {
     }
   }
 
+  /**
+   * Retrieves all web service users
+   * @returns An object containing an array of sanitized user data.
+   */
   async findAllUsers() {
     const users = await this.usersRepository.find();
     return {
@@ -51,6 +61,12 @@ export class UsersService {
     };
   }
 
+  /**
+   * Retrieves a web service user by its ID.
+   * @param id - The ID of the user to retrieve.
+   * @returns The sanitized user data.
+   * @throws An error if the user is not found.
+   */
   async findUserById(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
@@ -59,6 +75,11 @@ export class UsersService {
     return this.sanitizeUser(user);
   }
 
+  /**
+   * Sanitizes a user object by removing null or undefined properties.
+   * @param user - The user object to sanitize.
+   * @returns The sanitized user object.
+   */
   private sanitizeUser(user: User): User {
     Object.keys(user).forEach((key) => {
       if (user[key] === null || user[key] === undefined) {

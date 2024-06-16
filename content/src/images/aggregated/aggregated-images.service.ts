@@ -19,6 +19,11 @@ export class AggregatedImagesService {
     private readonly postprocessingService: PostprocessingService,
   ) {}
 
+  /**
+   * Processes a list of aggregated AI-generated images by downloading, saving, and postprocessing them.
+   * @param aggregatedImagesDto - Array of DTOs containing aggregated image information.
+   * @returns An object containing arrays of success and failure IDs.
+   */
   public async processAggregatedImages(
     aggregatedImagesDto: AggregatedImageDto[],
   ) {
@@ -47,6 +52,11 @@ export class AggregatedImagesService {
     return this.processTasksResults(results);
   }
 
+  /**
+   * Downloads an AI-generated image from the specified URL.
+   * @param url - The URL of the image to download.
+   * @returns The downloaded image as an ArrayBuffer.
+   */
   private async downloadImage(url: string): Promise<ArrayBuffer> {
     const fetchImageUsingDefaultClient = async (
       url: string,
@@ -67,6 +77,12 @@ export class AggregatedImagesService {
     }
   }
 
+  /**
+   * Downloads an AI-generated image from the specified URL in the stealth mode.
+   * @param url - The URL of the image to download.
+   * @param retries - The number of retries to attempt.
+   * @returns The downloaded image as an ArrayBuffer.
+   */
   private async tryDownloadImageInStealthMode(url: string, retries = 3) {
     try {
       const response = await this.downloadImageInStealthMode(url);
@@ -82,6 +98,11 @@ export class AggregatedImagesService {
     }
   }
 
+  /**
+   * Downloads an AI-generated image in stealth mode with specific headers.
+   * @param url - The URL of the image to download.
+   * @returns The downloaded image as a Blob.
+   */
   private async downloadImageInStealthMode(url: string) {
     const headers = {
       'sec-ch-ua':
@@ -96,6 +117,11 @@ export class AggregatedImagesService {
     return response.blob();
   }
 
+  /**
+   * Retrieves metadata of an AI-generated image using sharp.
+   * @param image - The image as an ArrayBuffer.
+   * @returns The metadata of the image.
+   */
   private async getImageMetadata(image: ArrayBuffer) {
     const metadata = await sharp(image).metadata();
     return {
@@ -108,6 +134,13 @@ export class AggregatedImagesService {
     };
   }
 
+  /**
+   * Saves an AI-generated image and its metadata to the database and storage.
+   * @param aggregatedImageDto - DTO containing aggregated image information.
+   * @param metadata - Metadata of the image.
+   * @param image - The image as a Buffer.
+   * @returns The saved image document.
+   */
   private async saveImage(
     aggregatedImageDto: AggregatedImageDto,
     metadata: any,
@@ -133,6 +166,11 @@ export class AggregatedImagesService {
     return savedImage;
   }
 
+  /**
+   * Processes the results of download tasks.
+   * @param results - Array of results from download tasks.
+   * @returns An object containing arrays of success and failure IDs.
+   */
   private processTasksResults(results: PromiseSettledResult<any>[]) {
     const successIds: string[] = [];
     const failureIds: string[] = [];

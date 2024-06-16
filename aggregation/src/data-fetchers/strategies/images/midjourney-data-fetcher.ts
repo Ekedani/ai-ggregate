@@ -14,6 +14,10 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     isTrusted: true,
   };
 
+  /**
+   * Fetches AI-generated images from the Midjourney SPA.
+   * @returns An array of AI-generated image documents.
+   */
   public async fetchData(): Promise<AiGeneratedImage[]> {
     puppeteer.use(StealthPlugin());
     const browser = await puppeteer.launch({
@@ -30,6 +34,11 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     return imagesData;
   }
 
+  /**
+   * Scrapes image data from the Midjourney showcase page.
+   * @param page - The Puppeteer page instance.
+   * @returns An array of AI-generated image documents.
+   */
   private async scrapeImagesData(page: Page): Promise<AiGeneratedImage[]> {
     await page.goto('https://www.midjourney.com/showcase');
     const detailPageUrls = await this.monitorAndCaptureUrls(page);
@@ -56,6 +65,11 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     return existingImagesData;
   }
 
+  /**
+   * Monitors the page for new image URLs and captures them.
+   * @param page - The Puppeteer page instance.
+   * @returns An array of captured image URLs.
+   */
   private async monitorAndCaptureUrls(page: Page): Promise<string[]> {
     const urls = new Set<string>();
 
@@ -98,28 +112,48 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     return Array.from(urls);
   }
 
-  private async scrollGalleryToEnd(page: Page, elementId: string) {
+  /**
+   * Scrolls the showcase gallery to the end to load all images.
+   * @param page - The Puppeteer page instance.
+   * @param galleryId - The ID of the gallery element.
+   */
+  private async scrollGalleryToEnd(page: Page, galleryId: string) {
     await page.evaluate(async (elementId) => {
-      const galleryElement = document.getElementById(elementId);
+      const gallery = document.getElementById(elementId);
+
+      if (!gallery) return;
+
       return new Promise<void>((resolve) => {
-        let lastScrollTop = galleryElement.scrollTop;
-        const interval = setInterval(() => {
-          galleryElement.scrollBy(0, 100);
-          if (galleryElement.scrollTop === lastScrollTop) {
-            clearInterval(interval);
+        const scrollStep = 100;
+        const scrollTimeout = 500;
+
+        let lastGalleryScrollTop = gallery.scrollTop;
+        const scrollInterval = setInterval(() => {
+          gallery.scrollBy(0, scrollStep);
+          if (gallery.scrollTop === lastGalleryScrollTop) {
+            clearInterval(scrollInterval);
             resolve();
           } else {
-            lastScrollTop = galleryElement.scrollTop;
+            lastGalleryScrollTop = gallery.scrollTop;
           }
-        }, 500);
+        }, scrollTimeout);
       });
-    }, elementId);
+    }, galleryId);
   }
 
+  /**
+   * Waits until the AI-generated image data is fully loaded on the showcase.
+   * @param page - The Puppeteer page instance.
+   */
   private async waitUntilImageDataLoaded(page: Page): Promise<void> {
     await page.waitForSelector('img.absolute.w-full.h-full');
   }
 
+  /**
+   * Extracts AI-generated image data from the provided HTML content.
+   * @param html - The HTML content of the page.
+   * @returns An array of AI-generated image documents.
+   */
   private extractImageData(html: string): AiGeneratedImage[] {
     const $ = load(html);
     const author = this.extractAuthor($);
@@ -141,18 +175,33 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     }));
   }
 
+  /**
+   * Extracts the author information from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The author name as a string.
+   */
   private extractAuthor($: CheerioAPI): string {
     return $(
       'div.whitespace-nowrap.pointer-events-auto.cursor-pointer span',
     ).text();
   }
 
+  /**
+   * Extracts the creation date from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The creation date as a Date object.
+   */
   private extractCreationDate($: CheerioAPI): Date {
     const dateText = $('span > div.cursor-help').parent().attr('title');
     const currentYear = new Date().getFullYear();
     return new Date(`${dateText} ${currentYear}`);
   }
 
+  /**
+   * Extracts the image IDs from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An array of image IDs.
+   */
   private extractImagesIds($: CheerioAPI): string[] {
     const originalUrl = $('img.absolute.w-full.h-full').attr('src');
     const parsedUrl = new URL(originalUrl);
@@ -160,6 +209,11 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     return Array.from({ length: 4 }, (_, i) => `${baseUuid}/0_${i}`);
   }
 
+  /**
+   * Extracts the image URLs from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An array of image URLs.
+   */
   private extractImagesUrls($: CheerioAPI): string[] {
     const originalUrl = $('img.absolute.w-full.h-full').attr('src');
     const parsedUrl = new URL(originalUrl);
@@ -167,6 +221,11 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     return Array.from({ length: 4 }, (_, i) => `${baseUrl}/0_${i}.png`);
   }
 
+  /**
+   * Extracts the image generation prompt from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The prompt as a string.
+   */
   private extractPrompt($: CheerioAPI): string {
     const imagesInPrompt = $('a[title="Image Prompt"]')
       .map((_, imageAnchor) => $(imageAnchor).attr('href'))
@@ -186,12 +245,22 @@ export class MidjourneyDataFetcher implements ImageFetcher {
     return `${mainPrompt} ${imagesInPrompt} ${tagsInPrompt}`;
   }
 
+  /**
+   * Extracts the technical generation tags from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An array of technical tags.
+   */
   private extractTechnicalTags($: CheerioAPI): string[] {
     return $('button[title="Use in prompt"]')
       .map((_, tagButton) => $(tagButton).text().replace(/--/g, '').trim())
       .get();
   }
 
+  /**
+   * Checks if the scrapped image exists at the provided URL.
+   * @param url - The URL of the image.
+   * @returns A boolean indicating whether the image exists.
+   */
   private async checkIfImageExists(url: string): Promise<boolean> {
     try {
       const response = await fetch(url, {

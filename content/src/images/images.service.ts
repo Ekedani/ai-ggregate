@@ -21,6 +21,13 @@ export class ImagesService {
     private readonly classifierService: ClassifiersService,
   ) {}
 
+  /**
+   * Saves a new AI-generated image, uploads it to storage, classifies it, and enqueues it for postprocessing.
+   * @param createImageDto - DTO containing image creation information.
+   * @param image - Image file to be saved.
+   * @param author - The author information of the image.
+   * @returns Saved AI-generated image document.
+   */
   async saveImage(
     createImageDto: CreateImageDto,
     image: Express.Multer.File,
@@ -50,6 +57,11 @@ export class ImagesService {
     return savedImage;
   }
 
+  /**
+   * Retrieves AI-generated images based on provided filters, with pagination support.
+   * @param getImagesDto - DTO containing filters and pagination information.
+   * @returns Paginated list of AI-generated images.
+   */
   async findImages(getImagesDto: GetImagesDto) {
     const { page, limit } = getImagesDto;
     const matchStage = this.buildMatchStage(getImagesDto);
@@ -57,6 +69,12 @@ export class ImagesService {
     return this.addPaginationData(results, page);
   }
 
+  /**
+   * Finds an AI-generated image by its ID.
+   * @param id - The ID of the image to find.
+   * @returns The image document.
+   * @throws NotFoundException if the image is not found.
+   */
   async findImageById(id: string) {
     const image = await this.aiGeneratedImageModel.findById(id);
     if (!image) {
@@ -65,11 +83,22 @@ export class ImagesService {
     return image;
   }
 
+  /**
+   * Deletes an AI-generated image by its ID.
+   * @param id - The ID of the image to delete.
+   * @throws NotFoundException if the image is not found.
+   */
   async deleteImage(id: string) {
     const image = await this.findImageById(id);
     await this.storageService.deleteObject('genai-images', image.storageKey);
     await this.aiGeneratedImageModel.deleteOne({ _id: id });
   }
+
+  /**
+   * Builds a match stage for MongoDB AI-generated images aggregation based on provided filters.
+   * @param getImagesDto - DTO containing filter information.
+   * @returns The match stage object for MongoDB aggregation.
+   */
 
   private buildMatchStage(getImagesDto: GetImagesDto) {
     const {
@@ -107,6 +136,13 @@ export class ImagesService {
     return matchStage;
   }
 
+  /**
+   * Gets matched AI-generated images from the database based.
+   * @param matchStage - The match stage object for MongoDB aggregation.
+   * @param page - The current page number for pagination.
+   * @param limit - The number of items per page for pagination.
+   * @returns The aggregation result containing metadata and image data.
+   */
   private getMatchedImages(matchStage: any, page: number, limit: number) {
     const pipeline: PipelineStage[] = [
       { $match: matchStage },
@@ -124,6 +160,12 @@ export class ImagesService {
     return this.aiGeneratedImageModel.aggregate(pipeline);
   }
 
+  /**
+   * Adds pagination data to the AI-generated result set.
+   * @param result - The aggregation result containing metadata and image data.
+   * @param page - The current page number for pagination.
+   * @returns Object containing total count, current page, and image data.
+   */
   private addPaginationData(result: any, page: number) {
     return {
       total: result[0].metadata[0]?.total || 0,
@@ -132,6 +174,13 @@ export class ImagesService {
     };
   }
 
+  /**
+   * Creates a new AI-generated image doc with metadata extracted using sharp.
+   * @param createImageDto - DTOt containing image creation information.
+   * @param image - The image file to be processed.
+   * @param author - The author information of the image.
+   * @returns The created image document.
+   */
   private async createImage(
     createImageDto: CreateImageDto,
     image: Express.Multer.File,

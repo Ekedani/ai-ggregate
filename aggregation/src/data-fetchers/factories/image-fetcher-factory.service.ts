@@ -10,6 +10,12 @@ import { HttpService } from '@nestjs/axios';
 export class ImageFetcherFactoryService {
   constructor(private httpService: HttpService) {}
 
+  /**
+   * Creates an AI-generated image fetcher instance based on the specified type.
+   * @param type - The type of image fetcher to create.
+   * @returns An instance of the specified image fetcher.
+   * @throws Error if the type is unknown.
+   */
   public create(type: string): ImageFetcher {
     switch (type) {
       case 'civitai':
@@ -25,6 +31,10 @@ export class ImageFetcherFactoryService {
     }
   }
 
+  /**
+   * Returns a list of supported AI-generated providers.
+   * @returns An array of supported AI-generated provider names.
+   */
   public getSupportedProviders(): string[] {
     return ['civitai', 'lexica', 'midjourney', 'prompthero'];
   }

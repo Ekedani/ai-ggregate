@@ -22,6 +22,11 @@ export class ModerationService {
     this.CONTENT_SERVICE_URL = `${configService.get<string>('CONTENT_SERVICE_URL')}`;
   }
 
+  /**
+   * Approves a list of images by their IDs, sending them to the main database.
+   * @param imageIds - The IDs of the images to approve.
+   * @returns An object containing the IDs of successfully approved images and any failures.
+   */
   async approveImages(imageIds: string[]) {
     const approvedImages = await this.findImagesByIds(imageIds);
 
@@ -50,6 +55,11 @@ export class ModerationService {
     };
   }
 
+  /**
+   * Rejects a list of images by their IDs.
+   * @param imageIds - The IDs of the images to reject.
+   * @returns An object containing the IDs of successfully rejected images and any failures.
+   */
   async rejectImages(imageIds: string[]) {
     const rejectedImages = await this.findImagesByIds(imageIds);
     const rejected = await this.updateImagesStatus(rejectedImages, 'rejected');
@@ -59,6 +69,11 @@ export class ModerationService {
     };
   }
 
+  /**
+   * Cancels the moderation status of a list of images by their IDs, setting them back to pending.
+   * @param imageIds - The IDs of the images to cancel moderation for.
+   * @returns An object containing the IDs of images set to pending and any failures.
+   */
   async cancelModeration(imageIds: string[]) {
     const approvedOrRejectedImages = await this.findImagesByIds(imageIds);
     await this.updateImagesStatus(approvedOrRejectedImages, 'pending');
@@ -69,6 +84,12 @@ export class ModerationService {
     };
   }
 
+  /**
+   * Finds images by their IDs.
+   * @param imageIds - The IDs of the images to find.
+   * @returns An array of found image documents.
+   * @throws BadRequestException if some images are not found.
+   */
   private async findImagesByIds(imageIds: string[]) {
     const uniqueImageIds = Array.from(new Set(imageIds));
     const objectIds = uniqueImageIds.map((id) => new Types.ObjectId(id));
@@ -83,6 +104,12 @@ export class ModerationService {
     return foundImages;
   }
 
+  /**
+   * Updates the status of a list of images.
+   * @param images - The list of image documents to update.
+   * @param status - The new status to set for the images.
+   * @returns The IDs of the updated images.
+   */
   private async updateImagesStatus(
     images: AiGeneratedImageDocument[],
     status: string,
@@ -98,6 +125,11 @@ export class ModerationService {
     return objectIds;
   }
 
+  /**
+   * Removes the review date from a list of images.
+   * @param images - The list of image documents to update.
+   * @returns The IDs of the updated images.
+   */
   private async removeReviewDate(images: AiGeneratedImageDocument[]) {
     const objectIds = images.map((image) => image._id);
     await this.aiGeneratedImageModel.updateMany(
@@ -109,6 +141,11 @@ export class ModerationService {
     return objectIds;
   }
 
+  /**
+   * Maps an image document to a DTO acceptable by content service.
+   * @param image - The image document to map.
+   * @returns The content DTO.
+   */
   private mapImageToContentDto(image: AiGeneratedImageDocument) {
     return {
       stagingId: image._id,

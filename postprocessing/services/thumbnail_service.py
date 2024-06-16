@@ -9,6 +9,12 @@ class ThumbnailService:
         self.quality = quality
 
     def get_thumbnail(self, image_data):
+        """
+        Generates a thumbnail for the AI-generated image.
+
+        :param image_data: Byte data of the original image.
+        :return: A BytesIO object containing the thumbnail image data or None if an error occurs.
+        """
         try:
             with Image.open(io.BytesIO(image_data)) as img:
                 if img.mode not in ('RGB', 'RGBA'):

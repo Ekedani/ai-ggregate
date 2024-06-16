@@ -18,6 +18,9 @@ models = {}
 
 
 def load_genai_image_classifiers():
+    """
+    Load all GenAI image classifiers from the models directory and store them in the dictionary.
+    """
     model_dir = 'models'
     for model_file in os.listdir(model_dir):
         if model_file.endswith('.pkl'):
@@ -31,6 +34,14 @@ BEST_CLASSIFIER = 'resnet34_image_classifier_v4'
 
 
 def get_prediction(model, request):
+    """
+    Get a prediction from the specified model for the image provided in the request.
+
+    :param model: The name of the model to use for prediction.
+    :param request: The request object containing the image file.
+    :return: JSON response with the prediction result or error message.
+    """
+
     model_obj = models.get(model)
     if not model_obj:
         return jsonify({'error': f'Model "{model}" not found'}), 404
@@ -57,11 +68,22 @@ def get_prediction(model, request):
 
 @app.route('/prediction', methods=['POST'])
 def predict_using_best_model():
+    """
+    Endpoint to get a prediction using the best model.
+
+    :return: JSON response with the prediction result or error message.
+    """
     return get_prediction(BEST_CLASSIFIER, request)
 
 
 @app.route('/<model>/prediction', methods=['POST'])
 def predict_using_custom_model(model):
+    """
+    Endpoint to get a prediction using a specified model.
+
+    :param model: The name of the model to use for prediction.
+    :return: JSON response with the prediction result or error message.
+    """
     return get_prediction(model, request)
 
 

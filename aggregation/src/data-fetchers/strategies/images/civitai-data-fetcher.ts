@@ -12,10 +12,18 @@ export class CivitaiDataFetcher implements ImageFetcher {
 
   constructor(private httpService: HttpService) {}
 
+  /**
+   * Fetches AI-generated images from the Civitai via its API.
+   * @returns An array of AI-generated image documents.
+   */
   async fetchData(): Promise<AiGeneratedImage[]> {
     return this.fetchCivitaiData();
   }
 
+  /**
+   * Fetches AI-generated image data from the Civitai API, handling pagination.
+   * @returns An array of AI-generated image documents.
+   */
   private async fetchCivitaiData(): Promise<AiGeneratedImage[]> {
     const imageData: AiGeneratedImage[] = [];
     let cursor: number | undefined = undefined;
@@ -42,6 +50,11 @@ export class CivitaiDataFetcher implements ImageFetcher {
     return imageData;
   }
 
+  /**
+   * Makes an API call to fetch images from Civitai.
+   * @param cursor - Optional cursor for pagination.
+   * @returns A promise resolving to the API response.
+   */
   private async getImagesFromAPI(
     cursor?: number,
   ): Promise<
@@ -61,6 +74,11 @@ export class CivitaiDataFetcher implements ImageFetcher {
     );
   }
 
+  /**
+   * Maps API response item to an AI-generated image document.
+   * @param item - The item from API response.
+   * @returns The mapped AI-generated image document.
+   */
   private mapToImageData(item: any): AiGeneratedImage {
     return {
       provider: this.provider,
@@ -82,6 +100,11 @@ export class CivitaiDataFetcher implements ImageFetcher {
     };
   }
 
+  /**
+   * Extracts content tags from the AI-generated image.
+   * @param item - The item from API response.
+   * @returns An array of content tags as strings.
+   */
   private extractContentTags(item: any): string[] {
     const tags = [];
     if (item.nsfw) {
@@ -90,6 +113,11 @@ export class CivitaiDataFetcher implements ImageFetcher {
     return tags;
   }
 
+  /**
+   * Extracts technical generation tags from the AI-generated image's metadata.
+   * @param meta - The metadata from API response item.
+   * @returns An array of technical tags as strings.
+   */
   private extractTechnicalTags(meta: any): string[] {
     const tags = [];
     if (meta === null) return tags;

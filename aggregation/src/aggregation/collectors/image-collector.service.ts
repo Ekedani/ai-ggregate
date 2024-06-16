@@ -16,6 +16,11 @@ export class ImageCollectorService {
     private readonly imageFetcherFactory: ImageFetcherFactoryService,
   ) {}
 
+  /**
+   * Collects AI-generated images based on the provided aggregation job.
+   * @param aggregationJob - The aggregation job containing data source details.
+   * @returns An array of DataSourceDetail objects.
+   */
   public async collectAiGeneratedImages(
     aggregationJob: AggregationJob,
   ): Promise<DataSourceDetail[]> {
@@ -31,6 +36,12 @@ export class ImageCollectorService {
     return this.processResults(results);
   }
 
+  /**
+   * Collects images from a specific provider.
+   * @param provider - The name of the provider.
+   * @param aggregationJob - The aggregation job containing data source details.
+   * @returns A DataSourceDetail object with the result of the collection.
+   */
   private async collectImagesFromProvider(
     provider: string,
     aggregationJob: AggregationJob,
@@ -56,11 +67,22 @@ export class ImageCollectorService {
     }
   }
 
+  /**
+   * Fetches images from a specific provider using the appropriate fetcher.
+   * @param provider - The name of the provider.
+   * @returns An array of AI-generated image documents.
+   */
   private async fetchImages(provider: string): Promise<AiGeneratedImage[]> {
     const fetcher = this.imageFetcherFactory.create(provider);
     return await fetcher.fetchData();
   }
 
+  /**
+   * Saves the fetched images to the staging database.
+   * @param images - The array of AI-generated images to save.
+   * @param aggregationJob - The aggregation job associated with the images.
+   * @returns The number of inserted images.
+   */
   private async saveImages(
     images: AiGeneratedImage[],
     aggregationJob: AggregationJob,
@@ -79,6 +101,14 @@ export class ImageCollectorService {
     }
   }
 
+  /**
+   * Creates a DataSourceDetail object.
+   * @param provider - The name of the provider.
+   * @param fetched - The number of fetched images.
+   * @param inserted - The number of inserted images.
+   * @param status - The status of the collection.
+   * @returns A DataSourceDetail object.
+   */
   private createDataSourceDetail(
     provider: string,
     fetched: number,
@@ -94,6 +124,11 @@ export class ImageCollectorService {
     };
   }
 
+  /**
+   * Processes the results of the image collection tasks.
+   * @param results - An array of PromiseSettledResult objects.
+   * @returns An array of DataSourceDetail objects.
+   */
   private processResults(
     results: PromiseSettledResult<DataSourceDetail>[],
   ): DataSourceDetail[] {

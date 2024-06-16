@@ -9,21 +9,21 @@
     </figure>
     <div class="card-content">
       <header class="card-header">
-        <h1 class="card-title">{{ image.author?.name || 'Невідомий автор' }} via {{ image.provider }}</h1>
+        <h1 class="card-title">{{ image.author?.name || 'Невідомий автор' }} через {{ image.provider }}</h1>
         <p>{{ image.createdAt | date:'medium' }}</p>
       </header>
       <div class="card-details">
-        <p *ngIf="image.prompt"><strong>Prompt:</strong> {{ image.prompt }}</p>
-        <p *ngIf="image.negativePrompt"><strong>Negative Prompt:</strong> {{ image.negativePrompt }}</p>
-        <p *ngIf="image.model"><strong>Model:</strong> {{ image.model }}</p>
-        <p *ngIf="image.classification"><strong>Label:</strong> {{ image.classification.label }}
-          (Confidence: {{ image.classification.confidence | number:'1.0-2' }} via {{ image.classification.model }})
+        <p *ngIf="image.prompt"><strong>Запит:</strong> {{ image.prompt }}</p>
+        <p *ngIf="image.negativePrompt"><strong>Негативний запит:</strong> {{ image.negativePrompt }}</p>
+        <p *ngIf="image.model"><strong>Модель:</strong> {{ image.model }}</p>
+        <p *ngIf="image.classification"><strong>Мітка:</strong> {{ image.classification.label }}
+          (Ймовірність: {{ image.classification.confidence | number:'1.0-2' }} через {{ image.classification.model }})
         </p>
-        <p><strong>Dimensions:</strong> {{ image.dimensions.width }} x {{ image.dimensions.height }}</p>
-        <p><strong>Format:</strong> {{ image.format }}, <strong>Size:</strong> {{ image.size }} bytes</p>
-        <p *ngIf="image.storageKey"><strong>Storage Key:</strong> {{ image.storageKey }}</p>
-        <p *ngIf="image.originalId"><strong>Original ID:</strong> {{ image.originalId }}</p>
-        <p *ngIf="image.provider"><strong>Provider:</strong> {{ image.provider }}</p>
+        <p><strong>Розширення:</strong> {{ image.dimensions.width }} x {{ image.dimensions.height }}</p>
+        <p><strong>Формат:</strong> {{ image.format }}, <strong>Розмір:</strong> {{ image.size }} байтів</p>
+        <p *ngIf="image.storageKey"><strong>Ключ сховища:</strong> {{ image.storageKey }}</p>
+        <p *ngIf="image.originalId"><strong>Оригінальний ID:</strong> {{ image.originalId }}</p>
+        <p *ngIf="image.provider"><strong>Постачальник:</strong> {{ image.provider }}</p>
         <p *ngIf="image.publicationUrl" class="card-links">
           <a mat-raised-button color="primary" href="{{ image.publicationUrl }}" target="_blank">
             <mat-icon>feed</mat-icon>
@@ -34,12 +34,12 @@
             Оригінальне зображення
           </a>
         </p>
-        <p *ngIf="image.contentTags && image.contentTags.length > 0"><strong>Content Tags:</strong>
+        <p *ngIf="image.contentTags && image.contentTags.length > 0"><strong>Теги Вмісту:</strong>
           <mat-chip-set>
             <mat-chip *ngFor="let tag of image.contentTags">{{ tag }}</mat-chip>
           </mat-chip-set>
         </p>
-        <p *ngIf="image.technicalTags && image.technicalTags.length > 0"><strong>Technical Tags:</strong>
+        <p *ngIf="image.technicalTags && image.technicalTags.length > 0"><strong>Технічні Теги:</strong>
           <mat-chip-set>
             <mat-chip *ngFor="let tag of image.technicalTags">{{ tag }}</mat-chip>
           </mat-chip-set>

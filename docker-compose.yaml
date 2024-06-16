@@ -1,10 +1,14 @@
 version: "3.8"
 services:
     ai-image-classifier:
+        networks:
+            - diploma-network    
         image: ekedani/ai-image-classifier:0.2
 
     users:
-        image: ekedani/dp-users:0.3
+        networks:
+            - diploma-network
+        image: ekedani/dp-users:latest
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
             JWT_PRIVATE_KEY_BASE64: ${JWT_PRIVATE_KEY_BASE64}
@@ -15,6 +19,8 @@ services:
             USERS_DB_NAME: ${USERS_DB_NAME}
 
     postprocessing:
+        networks:
+            - diploma-network    
         image: ekedani/dp-postprocessing:0.1
         environment:
             CONTENT_DB_URI: ${CONTENT_DB_URI}
@@ -25,6 +31,8 @@ services:
             MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
 
     content:
+        networks:
+            - diploma-network
         image: ekedani/dp-content:0.10
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
@@ -42,6 +50,8 @@ services:
             - ai-image-classifier
 
     aggregation:
+        networks:
+            - diploma-network
         image: ekedani/dp-aggregation:0.7
         environment:
             JWT_PUBLIC_KEY_BASE64: ${JWT_PUBLIC_KEY_BASE64}
@@ -53,6 +63,8 @@ services:
             - content
 
     gateway:
+        networks:
+            - diploma-network
         image: ekedani/dp-gateway:0.3
         ports:
             - "80:3000"
@@ -68,3 +80,7 @@ services:
             - content
             - aggregation
             - ai-image-classifier
+            
+networks:
+  diploma-network:
+    external: true

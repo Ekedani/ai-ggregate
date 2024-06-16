@@ -13,10 +13,18 @@ export class PromptheroDataFetcher implements ImageFetcher {
 
   constructor(private httpService: HttpService) {}
 
+  /**
+   * Fetches AI-generated images from the PromptHero website.
+   * @returns An array of AI-generated image documents.
+   */
   async fetchData(): Promise<AiGeneratedImage[]> {
     return this.fetchPromptheroData();
   }
 
+  /**
+   * Fetches AI-generated image data from the PromptHero website, handling pagination.
+   * @returns An array of AI-generated image documents.
+   */
   private async fetchPromptheroData(): Promise<AiGeneratedImage[]> {
     const imageUrls = await this.getImageUrls();
     const imagesData = [];
@@ -35,6 +43,10 @@ export class PromptheroDataFetcher implements ImageFetcher {
     return imagesData;
   }
 
+  /**
+   * Retrieves a list of AI-generated image URLs from the PromptHero website, handling pagination.
+   * @returns An array of image URLs.
+   */
   private async getImageUrls(): Promise<any[]> {
     let page = 1;
     let fetchMore = true;
@@ -56,6 +68,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
     return urls;
   }
 
+  /**
+   * Extracts prompt cards from the HTML content.
+   * @param html - The HTML content of the gallery page.
+   * @returns An array of objects containing prompt URL and creation date.
+   */
   private extractPromptCards(
     html: string,
   ): { promptUrl: string; createdAt: string }[] {
@@ -76,6 +93,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
       .get();
   }
 
+  /**
+   * Makes an API call to fetch a gallery page from PromptHero.
+   * @param page - The page number to fetch.
+   * @returns A promise resolving to the API response.
+   */
   private getGalleryPageFromAPI(page: number) {
     return lastValueFrom(
       this.httpService
@@ -89,6 +111,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
     );
   }
 
+  /**
+   * Makes an API call to fetch a prompt page from PromptHero.
+   * @param promptUrl - The URL of the prompt page to fetch.
+   * @returns A promise resolving to the API response.
+   */
   private getPromptPageFromAPI(promptUrl: string) {
     return lastValueFrom(
       this.httpService
@@ -97,6 +124,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
     );
   }
 
+  /**
+   * Extracts image data from the provided HTML content.
+   * @param html - The HTML content of the prompt page.
+   * @returns The AI-generated image document.
+   */
   private extractImageData(html: string): AiGeneratedImage {
     const $ = load(html);
     const prompt = this.extractPrompt($);
@@ -121,6 +153,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
     };
   }
 
+  /**
+   * Extracts the generation prompt from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The prompt as a string.
+   */
   private extractPrompt($: CheerioAPI) {
     return $('div.the-prompt b')
       .contents()
@@ -129,6 +166,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
       .join(' ');
   }
 
+  /**
+   * Extracts the image author from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The author name as a string.
+   */
   private extractAuthor($: CheerioAPI) {
     return $('div.d-flex.justify-content-between.mb-4 span')
       .first()
@@ -136,6 +178,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
       .trim();
   }
 
+  /**
+   * Extracts the generative model from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The model name as a string.
+   */
   private extractModel($: CheerioAPI) {
     return $('i.fa-solid.fa-robot')
       .parent()
@@ -148,6 +195,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
       .trim();
   }
 
+  /**
+   * Extracts the creation date from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The creation date as a Date object.
+   */
   private extractCreationDate($: CheerioAPI) {
     const dateText = $('span')
       .filter(function () {
@@ -160,10 +212,20 @@ export class PromptheroDataFetcher implements ImageFetcher {
     return parse(dateText, format, new Date());
   }
 
+  /**
+   * Extracts the AI-generated image URL from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The image URL as a string.
+   */
   private extractImageUrl($: CheerioAPI) {
     return $('img.img-fluid').first().attr('src');
   }
 
+  /**
+   * Extracts the dimensions of the AI-generated image from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An object containing the width and height of the image.
+   */
   private extractDimensions($: CheerioAPI) {
     const dimensionsText = $('i.fa-regular.fa-image').parent().text().trim();
     const [width, height] = dimensionsText
@@ -175,6 +237,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
     };
   }
 
+  /**
+   * Extracts technical generation tags from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An array of technical tags as strings.
+   */
   private extractTechnicalTags($: CheerioAPI) {
     const metadata = $('div.metadata');
     return metadata
@@ -187,6 +254,11 @@ export class PromptheroDataFetcher implements ImageFetcher {
       .get();
   }
 
+  /**
+   * Extracts the original ID of the AI-generated image from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The original ID as a string.
+   */
   private extractOriginalId($: CheerioAPI) {
     return $('img.img-fluid')
       .first()

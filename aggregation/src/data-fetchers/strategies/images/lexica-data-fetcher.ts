@@ -9,6 +9,10 @@ export class LexicaDataFetcher implements ImageFetcher {
     isTrusted: false,
   };
 
+  /**
+   * Fetches AI-generated images from the Lexica SPA.
+   * @returns An array of AI-generated image documents.
+   */
   async fetchData(): Promise<AiGeneratedImage[]> {
     const browser = await puppeteer.launch({
       headless: true,
@@ -25,6 +29,11 @@ export class LexicaDataFetcher implements ImageFetcher {
     return imagesData;
   }
 
+  /**
+   * Scrapes image data from the Lexica gallery.
+   * @param page - The Puppeteer page instance.
+   * @returns An array of AI-generated image documents.
+   */
   private async scrapeImagesData(page: Page): Promise<AiGeneratedImage[]> {
     await page.goto('https://lexica.art/');
     const detailPageUrls = await this.monitorAndCaptureUrls(page);
@@ -48,6 +57,11 @@ export class LexicaDataFetcher implements ImageFetcher {
     return imagesData;
   }
 
+  /**
+   * Monitors the page for new AI-generated image URLs and captures them.
+   * @param page - The Puppeteer page instance.
+   * @returns An array of captured image URLs.
+   */
   private async monitorAndCaptureUrls(page: Page): Promise<string[]> {
     const urls = new Set<string>();
     await page.exposeFunction('saveUrl', (url: string) => {
@@ -65,6 +79,11 @@ export class LexicaDataFetcher implements ImageFetcher {
     return Array.from(urls);
   }
 
+  /**
+   * Sets a mutation observer on the page to capture new AI-generated image URLs.
+   * @param page - The Puppeteer page instance.
+   * @returns A handle to the mutation observer.
+   */
   private async setMutationObserver(page: Page) {
     return page.evaluateHandle(() => {
       const processNode = (node) => {
@@ -92,26 +111,45 @@ export class LexicaDataFetcher implements ImageFetcher {
     });
   }
 
-  private async scrollPageUntilSetIsFilled(page: Page, requiredSize: number) {
-    await page.evaluate(async (requiredSize) => {
+  /**
+   * Scrolls the gallery page until the required number of image URLs are captured.
+   * @param page - The Puppeteer gallery page instance.
+   * @param requiredSetSize - The required number of image URLs to capture.
+   */
+  private async scrollPageUntilSetIsFilled(
+    page: Page,
+    requiredSetSize: number,
+  ) {
+    await page.evaluate(async (requiredSetSize) => {
+      const scrollStep = 100;
+      const scrollTimeout = 500;
+
       return new Promise<void>((resolve) => {
-        const interval = setInterval(async () => {
-          window.scrollBy(0, 100);
+        const scrollInterval = setInterval(async () => {
+          window.scrollBy(0, scrollStep);
           const currentSetSize = await window['getSetSize']();
-          console.log(currentSetSize);
-          if (currentSetSize >= requiredSize) {
-            clearInterval(interval);
+          if (currentSetSize >= requiredSetSize) {
+            clearInterval(scrollInterval);
             resolve();
           }
-        }, 500);
+        }, scrollTimeout);
       });
-    }, requiredSize);
+    }, requiredSetSize);
   }
 
+  /**
+   * Waits until the AI-generated image data is fully loaded on the page.
+   * @param page - The Puppeteer page instance.
+   */
   private async waitUntilImageDataLoaded(page: Page): Promise<void> {
     await page.waitForSelector('img.select-none');
   }
 
+  /**
+   * Extracts AI-generated image data from the provided HTML content.
+   * @param html - The HTML content of the page.
+   * @returns An array of AI-generated image documents.
+   */
   private extractImageData(html: string): AiGeneratedImage[] {
     const $ = load(html);
     const imagesIds = this.extractImagesIds($);
@@ -130,12 +168,22 @@ export class LexicaDataFetcher implements ImageFetcher {
     }));
   }
 
+  /**
+   * Extracts image IDs from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An array of image IDs as strings.
+   */
   private extractImagesIds($: CheerioAPI): string[] {
     return $('img.select-none')
       .map((_, imageAnchor) => $(imageAnchor).attr('src').split('/').pop())
       .get();
   }
 
+  /**
+   * Extracts image URLs from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An array of image URLs as strings.
+   */
   private extractImagesUrls($: CheerioAPI): string[] {
     return $('img.select-none')
       .map((_, imageAnchor) =>
@@ -146,10 +194,20 @@ export class LexicaDataFetcher implements ImageFetcher {
       .get();
   }
 
+  /**
+   * Extracts the generative model information from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The model information as a string.
+   */
   private extractImageModel($: CheerioAPI): string {
     return $('div:contains("Model") + div.text-sm').text().trim();
   }
 
+  /**
+   * Extracts the dimensions of the image from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns An object containing the width and height of the image.
+   */
   private extractImageDimensions($: CheerioAPI): {
     width: number;
     height: number;
@@ -167,6 +225,11 @@ export class LexicaDataFetcher implements ImageFetcher {
     };
   }
 
+  /**
+   * Extracts the generation prompt from the HTML content.
+   * @param $ - The Cheerio API instance.
+   * @returns The prompt as a string.
+   */
   private extractImagePrompt($: CheerioAPI) {
     return $('div.mt-6 p').text().trim();
   }
