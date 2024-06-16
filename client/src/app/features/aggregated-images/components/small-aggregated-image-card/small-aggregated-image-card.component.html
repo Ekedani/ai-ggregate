@@ -1,10 +1,10 @@
 <mat-card class="ai-image-card-container" *ngIf="image">
   <img mat-card-image [src]="image.imageUrl" [alt]="image.altText || 'AI generated'" appImageFallback>
   <mat-card-content>
-    <h3>{{ image.provider.name }} <span *ngIf="image.provider.isTrusted">- Trusted</span></h3>
+    <h3>{{ image.provider.name }} <span *ngIf="image.provider.isTrusted">- Довірений</span></h3>
     <p *ngIf="image.prompt else placeholder">{{ image.prompt | slice:0:50 }}...</p>
     <ng-template #placeholder>
-      <p>Unknown prompt</p>
+      <p>Невідомий запит генерації</p>
     </ng-template>
   </mat-card-content>
 </mat-card>

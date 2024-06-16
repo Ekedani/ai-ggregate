@@ -12,7 +12,7 @@
         <mat-card-title>{{ data.image.provider.name }}</mat-card-title>
         <mat-card-subtitle>
           <mat-icon *ngIf="data.image.provider.isTrusted">verified_user</mat-icon>
-          {{ data.image.provider.isTrusted ? 'Trusted' : 'Not Trusted' }}
+          {{ data.image.provider.isTrusted ? 'Довірений' : 'Не довірений' }}
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
@@ -24,7 +24,7 @@
         <p *ngIf="data.image.model"><b>Модель:</b> {{ data.image.model }}</p>
         <p *ngIf="data.image.author"><b>Автор:</b> {{ data.image.author }}</p>
         <p *ngIf="data.image.createdAt"><b>Створено:</b> {{ data.image.createdAt | date:'medium' }}</p>
-        <p *ngIf="data.image.publicationUrl"><b>Публікація:</b> <a [href]="data.image.publicationUrl">Link</a></p>
+        <p *ngIf="data.image.publicationUrl"><b>Публікація: </b> <a [href]="data.image.publicationUrl">посилання</a></p>
         <p *ngIf="data.image.status"><b>Статус:</b> {{ data.image.status }}</p>
         <p *ngIf="data.image.reviewedAt"><b>Переглянуто:</b> {{ data.image.reviewedAt | date:'medium' }}</p>
         <p *ngIf="data.image.contentTags?.length"><b>Теги Вмісту:</b> {{ data.image.contentTags?.join(', ') }}</p>

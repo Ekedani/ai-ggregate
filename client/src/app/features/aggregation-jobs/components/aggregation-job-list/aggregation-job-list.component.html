@@ -49,9 +49,9 @@
         }}
       </mat-icon>
       Статус: {{
-        isRunning(job) ? 'Running' :
-          isSuccess(job) ? 'Success' :
-            isFailure(job) ? 'Failure' : 'Unknown'
+        isRunning(job) ? 'Виконується' :
+          isSuccess(job) ? 'Успіх' :
+            isFailure(job) ? 'Невдача' : 'Невідомо'
       }}
     </mat-card-footer>
   </mat-card>
