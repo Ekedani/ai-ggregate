@@ -86,7 +86,7 @@ export class ImagesClassificationComponent {
         this.classificationResult = result;
       },
       error: (error) => {
-        this.toastrService.error(error.data, 'Classification Error')
+        this.toastrService.error(error.data, 'Помилка класифікації')
       }
     });
   }

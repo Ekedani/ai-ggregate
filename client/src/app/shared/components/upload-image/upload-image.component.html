@@ -2,23 +2,23 @@
   <h2>Завантажити нове ШІ-генероване зображення</h2>
 
   <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Model</mat-label>
+    <mat-label>Модель</mat-label>
     <input matInput formControlName="model" placeholder="Enter model name">
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Prompt</mat-label>
+    <mat-label>Запит</mat-label>
     <input matInput formControlName="prompt" placeholder="Enter prompt">
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Negative Prompt</mat-label>
+    <mat-label>Негативний Запит</mat-label>
     <input matInput formControlName="negativePrompt" placeholder="Enter negative prompt">
   </mat-form-field>
 
   <div class="form-row">
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Technical Tags</mat-label>
+      <mat-label>Технічні Теги</mat-label>
       <mat-chip-grid #technicalTags>
         <mat-chip-row
           *ngFor="let tag of form.get('technicalTags')?.value"
@@ -56,5 +56,5 @@
     </mat-form-field>
   </div>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit</button>
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Завантажити</button>
 </form>

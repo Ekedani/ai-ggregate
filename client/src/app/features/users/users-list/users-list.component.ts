@@ -30,7 +30,7 @@ export class UsersListComponent {
   ngOnInit() {
     this.usersService.getUsers().subscribe({
       error: (error) => {
-        this.toastrService.error(error.message, 'Users Error')
+        this.toastrService.error(error.message, 'Помилка пошуку користувачів')
       }
     });
   }

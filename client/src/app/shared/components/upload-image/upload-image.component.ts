@@ -107,11 +107,11 @@ export class UploadImageComponent implements OnInit {
     if (this.form.valid) {
       this.imageService.uploadImage(this.form.value).subscribe({
           next: () => {
-            this.toastrService.success('Image uploaded successfully');
+            this.toastrService.success('Зображення успішно завантажено');
             this.dialogRef.close();
           },
           error: error => {
-            this.toastrService.error('Error uploading image');
+            this.toastrService.error('Помилка завантаження зображення');
             this.dialogRef.close();
           }
         }

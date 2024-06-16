@@ -103,11 +103,11 @@ export class AggregatedImageListComponent implements OnInit, OnDestroy {
     this.aggregatedImagesService.rejectImages(Array.from(this.selectedImages).map(image => image._id)).subscribe(
       {
         next: () => {
-          this.toastrService.success('Images rejected');
+          this.toastrService.success('Зображення відхилено');
           this.loadImages(this.currentPage);
         },
         error: (error) => {
-          this.toastrService.error(error.data, 'Error rejecting images');
+          this.toastrService.error(error.data, 'Помилка відхилення зображень');
         }
       }
     );
@@ -117,11 +117,11 @@ export class AggregatedImageListComponent implements OnInit, OnDestroy {
     this.aggregatedImagesService.approveImages(Array.from(this.selectedImages).map(image => image._id)).subscribe(
       {
         next: () => {
-          this.toastrService.success('Images approved');
+          this.toastrService.success('Зображення схвалено');
           this.loadImages(this.currentPage);
         },
         error: (error) => {
-          this.toastrService.error(error.data, 'Error approving images');
+          this.toastrService.error(error.data, 'Помилка схвалення зображень');
         }
       }
     );
