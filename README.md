@@ -9,7 +9,6 @@ This repository contains the diploma project for the bachelor's degree in Softwa
 - [C4 Diagrams](#c4-diagrams)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contact](#contact)
 
 ## About the Project
 The **AI-ggregate** web service is developed to address the growing need for a centralized service to handle AI-generated content. The platform aggregates AI-generated images from open sources, allows users to upload their own AI-generated content, and enables users to search and classify AI-generated images. It is particularly useful for developers, researchers in AI, and general users interested in generative AI content.
@@ -90,8 +89,3 @@ To run the application, use the following commands:
    ```bash
    npm start
    ```
-
-## Contact
-
-Vladlen Iliushchenko – [Your Email]  
-Project Link: [https://github.com/Ekedani/diploma-project](https://github.com/Ekedani/diploma-project)
